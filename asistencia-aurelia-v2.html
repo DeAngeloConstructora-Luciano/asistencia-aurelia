@@ -438,13 +438,6 @@ function App(){
       dia.data.correcciones.forEach(x=>todasCorrecciones.push({...x,fecha:isoALegible(dia.iso)}));
     });
 
-    const borrarDia = (isoF)=>{
-      if(!window.confirm(`¿Borrar todos los registros del ${isoALegible(isoF)}?\n\nSe elimina la carga del capataz y las correcciones de ese día. No se puede deshacer.`)) return;
-      if(!window.confirm('Confirmá una vez más: esta acción es definitiva.')) return;
-      localStorage.removeItem(claveDia(adminObra,isoF));
-      setAdminQuincena({...adminQuincena});
-    };
-
     // respaldo de un día puntual, se descarga antes de borrar
     const descargarRespaldoDia = (isoF)=>{
       const d = leerDia(adminObra,isoF);
@@ -538,22 +531,6 @@ function App(){
                 ))}
               </tbody>
             </table>
-          </div>
-        )}
-
-        {diasConDatos.length>0 && (
-          <div className="card">
-            <h3>Borrar registros de un día</h3>
-            <p className="info-text">Elimina la carga completa del capataz para ese día. Úsalo solo si el día quedó mal cargado y hay que rehacerlo.</p>
-            {diasConDatos.map(dia=>(
-              <div key={dia.iso} className="registro-item">
-                <span className="registro-nombre">
-                  {isoALegible(dia.iso)}
-                  {dia.data.cerrado && <span className="marca" style={{marginLeft:8}}>cerrado</span>}
-                </span>
-                <button className="link-editar" style={{color:'#8a1d15'}} onClick={()=>borrarDia(dia.iso)}>Borrar día</button>
-              </div>
-            ))}
           </div>
         )}
 
