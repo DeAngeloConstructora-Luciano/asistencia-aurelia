@@ -13,6 +13,7 @@
   --verde:#0F6E56;
   --rojo:#A32D2D;
   --ausencia:#BA2D1A;
+  --art:#84211E;
   --secundario:#404E50;
   --oscuro:#2C3639;
   --amarillo:#FFF3C4;
@@ -35,6 +36,8 @@ button:disabled{opacity:.45;cursor:not-allowed;}
 .btn-entrada{background:var(--verde);color:#fff;}
 .btn-salida{background:var(--rojo);color:#fff;}
 .btn-ausencia{background:var(--ausencia);color:#fff;}
+.btn-art{background:var(--art);color:#fff;}
+.btn-borrar{background:#8a1d15;color:#fff;width:100%;}
 .btn-secondary{background:var(--secundario);color:#fff;width:100%;}
 .btn-cancel{background:#c9c5ba;color:#2C3639;}
 .btn-small{padding:9px 12px;font-size:13px;}
@@ -60,12 +63,14 @@ button:disabled{opacity:.45;cursor:not-allowed;}
 .entrada-badge{color:var(--verde);font-weight:600;}
 .salida-badge{color:var(--rojo);font-weight:600;}
 .ausencia-badge{color:var(--ausencia);font-weight:600;}
+.art-badge{color:var(--art);font-weight:600;}
 .link-editar{background:none;border:none;color:var(--secundario);font-size:12px;text-decoration:underline;padding:2px 4px;font-weight:600;}
 .tabla{width:100%;font-size:13px;border-collapse:collapse;}
 .tabla td{padding:8px 4px;border-bottom:1px solid #eeebe3;}
 .tabla td:nth-child(2),.tabla td:nth-child(3){text-align:center;color:#555;}
 .fila-incompleta{background:#fdf1e3;}
 .fila-ausencia{background:#f7e9e6;}
+.fila-art{background:#efe4e3;}
 .fila-corregida{background:var(--amarillo);}
 .aviso{background:#fce9ee;border:1px solid #f0b6c5;border-radius:8px;padding:12px;margin-bottom:1rem;}
 .aviso-titulo{font-size:13px;font-weight:600;color:#a01840;margin-bottom:6px;}
@@ -89,6 +94,7 @@ button:disabled{opacity:.45;cursor:not-allowed;}
 .tabla-quincena th.nombre{text-align:left;position:sticky;left:0;z-index:3;min-width:150px;}
 .celda-corregida{background:var(--amarillo);border:1px solid var(--amarillo-borde)!important;font-weight:600;}
 .celda-ausencia{background:#f7e9e6;color:var(--ausencia);font-weight:600;}
+.celda-art{background:#efe4e3;color:var(--art);font-weight:600;}
 .celda-vacia{color:#c0bcb2;}
 .correccion-item{font-size:13px;padding:9px 0;border-bottom:1px solid #eeebe3;}
 .correccion-item:last-child{border-bottom:none;}
@@ -97,6 +103,8 @@ button:disabled{opacity:.45;cursor:not-allowed;}
 .leyenda span{display:flex;align-items:center;gap:5px;}
 .cuadrito{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid #ccc;}
 .badge-cerrado{display:inline-block;background:var(--verde);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;margin-left:8px;vertical-align:middle;}
+.dias-borrar{display:flex;flex-wrap:wrap;gap:8px;}
+.dias-borrar button{min-width:58px;}
 </style>
 </head>
 <body>
@@ -157,6 +165,10 @@ function App(){
   const [mMotivo,setMMotivo] = useState('');
   const [adminObra,setAdminObra] = useState(null);
   const [adminQuincena,setAdminQuincena] = useState(null);
+  const [borrarDia,setBorrarDia] = useState(null); // {iso, legible}
+  const [borrarPass,setBorrarPass] = useState('');
+  const [borrarError,setBorrarError] = useState('');
+  const [refresco,setRefresco] = useState(0);
 
   const iso = hoyISO();
 
@@ -188,15 +200,18 @@ function App(){
   const tieneEntrada = emp=>!!reg(emp,'entrada');
   const tieneSalida  = emp=>!!reg(emp,'salida');
   const tieneAusencia= emp=>!!reg(emp,'ausencia');
+  const tieneART     = emp=>!!reg(emp,'art');
+  const tieneAlgo    = emp=>tieneEntrada(emp)||tieneSalida(emp)||tieneAusencia(emp)||tieneART(emp);
 
   const resumen = ()=>{
     const r={};
-    cfg.empleados.forEach(e=>r[e]={entrada:null,salida:null,ausencia:false,corregido:false});
+    cfg.empleados.forEach(e=>r[e]={entrada:null,salida:null,ausencia:false,art:false,corregido:false});
     registros.forEach(x=>{
       if(!r[x.empleado]) return;
       if(x.tipo==='entrada') r[x.empleado].entrada=x.hora;
       if(x.tipo==='salida')  r[x.empleado].salida=x.hora;
       if(x.tipo==='ausencia')r[x.empleado].ausencia=true;
+      if(x.tipo==='art')     r[x.empleado].art=true;
       if(x.corregido) r[x.empleado].corregido=true;
     });
     correcciones.forEach(c=>{if(r[c.empleado]) r[c.empleado].corregido=true;});
@@ -207,7 +222,7 @@ function App(){
     const res = resumen();
     return cfg.empleados.filter(e=>{
       const x=res[e];
-      if(x.ausencia) return false;
+      if(x.ausencia || x.art) return false;
       return !x.entrada || !x.salida;
     });
   };
@@ -220,7 +235,8 @@ function App(){
 
   const registrarEntrada = ()=>{
     if(!sel) return;
-    if(tieneAusencia(sel)){alert('Este empleado está marcado como ausencia. Eliminá la ausencia desde el resumen si vino a trabajar.');return;}
+    if(tieneAusencia(sel)){alert('Este empleado está marcado como ausencia. Eliminá la ausencia desde la lista de registros si vino a trabajar.');return;}
+    if(tieneART(sel)){alert('Este empleado está marcado con ART. Eliminá el ART desde la lista de registros si vino a trabajar.');return;}
     if(tieneEntrada(sel)){alert('Este empleado ya tiene entrada registrada.');return;}
     agregar(sel,'entrada',horaAhora(),'auto');
     setSel('');setBusqueda('');
@@ -228,6 +244,7 @@ function App(){
   const registrarSalida = ()=>{
     if(!sel) return;
     if(tieneAusencia(sel)){alert('Este empleado está marcado como ausencia.');return;}
+    if(tieneART(sel)){alert('Este empleado está marcado con ART.');return;}
     if(!tieneEntrada(sel)){alert('No se puede cargar la salida: este empleado no tiene entrada registrada.');return;}
     if(tieneSalida(sel)){alert('Este empleado ya tiene salida registrada.');return;}
     agregar(sel,'salida',horaAhora(),'auto');
@@ -235,9 +252,14 @@ function App(){
   };
   const registrarAusencia = ()=>{
     if(!sel) return;
-    if(tieneEntrada(sel)||tieneSalida(sel)){alert('Este empleado ya tiene registros del día. Eliminalos desde el resumen antes de marcar ausencia.');return;}
-    if(tieneAusencia(sel)){alert('Este empleado ya está marcado como ausencia.');return;}
+    if(tieneAlgo(sel)){alert('Este empleado ya tiene registros del día. Eliminalos desde la lista de registros antes de marcar ausencia.');return;}
     agregar(sel,'ausencia',null,'auto');
+    setSel('');setBusqueda('');
+  };
+  const registrarART = ()=>{
+    if(!sel) return;
+    if(tieneAlgo(sel)){alert('Este empleado ya tiene registros del día. Eliminalos desde la lista de registros antes de marcar ART.');return;}
+    agregar(sel,'art',null,'auto');
     setSel('');setBusqueda('');
   };
 
@@ -247,6 +269,7 @@ function App(){
     if(!mEmp||!mHora){alert('Completá empleado y horario.');return;}
     const campo = modal.campo;
     if(tieneAusencia(mEmp)){alert('Ese empleado está marcado como ausencia.');return;}
+    if(tieneART(mEmp)){alert('Ese empleado está marcado con ART.');return;}
     if(campo==='entrada' && tieneEntrada(mEmp)){alert('Ese empleado ya tiene entrada.');return;}
     if(campo==='salida'){
       if(!tieneEntrada(mEmp)){alert('No se puede cargar la salida: falta la entrada de ese empleado.');return;}
@@ -259,13 +282,15 @@ function App(){
   // edición / eliminación con auditoría
   const abrirEditar = (emp,tipo)=>{
     const r = reg(emp,tipo);
+    const etiqueta = tipo==='ausencia'?'Ausente':(tipo==='art'?'ART':'');
     setMEmp(emp);setMHora(r?r.hora||'':'');setMMotivo('');
-    setModal({tipo:'editar',empleado:emp,campo:tipo,valorAnterior:r?(r.hora||'Ausencia'):''});
+    setModal({tipo:'editar',empleado:emp,campo:tipo,valorAnterior:r?(r.hora||etiqueta):''});
   };
   const guardarEdicion = ()=>{
     const {empleado,campo,valorAnterior} = modal;
-    if(campo!=='ausencia' && !mHora){alert('Ingresá el horario.');return;}
-    if(campo!=='ausencia' && mHora===valorAnterior){setModal(null);return;}
+    const sinHora = campo==='ausencia' || campo==='art';
+    if(!sinHora && !mHora){alert('Ingresá el horario.');return;}
+    if(!sinHora && mHora===valorAnterior){setModal(null);return;}
     setRegistros(prev=>prev.map(r=>
       (r.empleado===empleado && r.tipo===campo) ? {...r,hora:mHora,origen:'corregido',corregido:true,sello:selloAhora()} : r
     ));
@@ -302,6 +327,7 @@ function App(){
     cfg.empleados.forEach(e=>{
       const x=res[e];
       if(x.ausencia) msg += `${e}: AUSENTE\n`;
+      else if(x.art) msg += `${e}: ART\n`;
       else msg += `${e}: ${x.entrada} a ${x.salida}${x.corregido?' (corregido)':''}\n`;
     });
     if(correcciones.length) msg += `\nCorrecciones del día: ${correcciones.length}\n`;
@@ -393,12 +419,14 @@ function App(){
       dias.push({d,iso:isoF,data:leerDia(adminObra,isoF)});
     }
     const diasConDatos = dias.filter(x=>x.data);
+    void refresco; // fuerza recálculo después de borrar un día
 
     const celdaDe = (dia,emp)=>{
       if(!dia.data) return {texto:'',clase:'celda-vacia'};
       const rs = dia.data.registros.filter(r=>r.empleado===emp);
       if(!rs.length) return {texto:'—',clase:'celda-vacia'};
       if(rs.some(r=>r.tipo==='ausencia')) return {texto:'AUS',clase:'celda-ausencia'};
+      if(rs.some(r=>r.tipo==='art')) return {texto:'ART',clase:'celda-art'};
       const e = rs.find(r=>r.tipo==='entrada');
       const s = rs.find(r=>r.tipo==='salida');
       const corregido = rs.some(r=>r.corregido) || dia.data.correcciones.some(x=>x.empleado===emp);
@@ -410,6 +438,46 @@ function App(){
       dia.data.correcciones.forEach(x=>todasCorrecciones.push({...x,fecha:isoALegible(dia.iso)}));
     });
 
+    const borrarDia = (isoF)=>{
+      if(!window.confirm(`¿Borrar todos los registros del ${isoALegible(isoF)}?\n\nSe elimina la carga del capataz y las correcciones de ese día. No se puede deshacer.`)) return;
+      if(!window.confirm('Confirmá una vez más: esta acción es definitiva.')) return;
+      localStorage.removeItem(claveDia(adminObra,isoF));
+      setAdminQuincena({...adminQuincena});
+    };
+
+    // respaldo de un día puntual, se descarga antes de borrar
+    const descargarRespaldoDia = (isoF)=>{
+      const d = leerDia(adminObra,isoF);
+      if(!d) return;
+      let csv = `RESPALDO ANTES DE BORRAR\nOBRA:,${c.nombre}\nFECHA:,${isoALegible(isoF)}\nDescargado el:,${selloAhora()}\n\n`;
+      csv += 'Empleado,Entrada,Salida,Estado\n';
+      c.empleados.forEach(emp=>{
+        const rs = d.registros.filter(r=>r.empleado===emp);
+        if(rs.some(r=>r.tipo==='ausencia')){csv += `"${emp}",-,-,AUSENTE\n`;return;}
+        const e=rs.find(r=>r.tipo==='entrada'), s=rs.find(r=>r.tipo==='salida');
+        const corr = rs.some(r=>r.corregido)||d.correcciones.some(x=>x.empleado===emp);
+        csv += `"${emp}",${e?e.hora:'-'},${s?s.hora:'-'},${corr?'CORREGIDO':''}\n`;
+      });
+      if(d.correcciones.length){
+        csv += `\nCORRECCIONES\nEmpleado,Campo,Acción,Anterior,Nuevo,Motivo,Registrado\n`;
+        d.correcciones.forEach(x=>{
+          csv += `"${x.empleado}",${x.campo},${x.accion},${x.anterior},${x.nuevo},"${x.motivo||''}",${x.sello}\n`;
+        });
+      }
+      const a=document.createElement('a');
+      a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);
+      a.download=`RESPALDO-${adminObra}-${isoF}.csv`;
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+    };
+
+    const confirmarBorrado = ()=>{
+      if(borrarPass!==ADMIN_PASS){setBorrarError('Contraseña incorrecta');setBorrarPass('');return;}
+      descargarRespaldoDia(borrarDia.iso);
+      localStorage.removeItem(claveDia(adminObra,borrarDia.iso));
+      setBorrarDia(null);setBorrarPass('');setBorrarError('');
+      setRefresco(n=>n+1);
+    };
+
     const descargarCSV = ()=>{
       let csv = `OBRA:,${c.nombre}\nQUINCENA:,${q===1?'1 al 15':'16 al '+ultimoDia} de ${MESES[mes]} ${anio}\n\n`;
       csv += 'Empleado,' + diasConDatos.map(x=>`${x.d}/${mes+1} entrada,${x.d}/${mes+1} salida`).join(',') + '\n';
@@ -417,6 +485,7 @@ function App(){
         const fila = diasConDatos.map(dia=>{
           const rs = dia.data.registros.filter(r=>r.empleado===emp);
           if(rs.some(r=>r.tipo==='ausencia')) return 'AUSENTE,AUSENTE';
+          if(rs.some(r=>r.tipo==='art')) return 'ART,ART';
           const e=rs.find(r=>r.tipo==='entrada'), s=rs.find(r=>r.tipo==='salida');
           return `${e?e.hora:'-'},${s?s.hora:'-'}`;
         });
@@ -442,6 +511,7 @@ function App(){
         <div className="leyenda">
           <span><i className="cuadrito" style={{background:'var(--amarillo)',borderColor:'var(--amarillo-borde)'}}></i> Corregido por el capataz</span>
           <span><i className="cuadrito" style={{background:'#f7e9e6'}}></i> Ausente</span>
+          <span><i className="cuadrito" style={{background:'#efe4e3'}}></i> ART</span>
           <span><i className="cuadrito" style={{background:'#fff'}}></i> Fila superior: entrada · inferior: salida</span>
         </div>
 
@@ -471,6 +541,22 @@ function App(){
           </div>
         )}
 
+        {diasConDatos.length>0 && (
+          <div className="card">
+            <h3>Borrar registros de un día</h3>
+            <p className="info-text">Elimina la carga completa del capataz para ese día. Úsalo solo si el día quedó mal cargado y hay que rehacerlo.</p>
+            {diasConDatos.map(dia=>(
+              <div key={dia.iso} className="registro-item">
+                <span className="registro-nombre">
+                  {isoALegible(dia.iso)}
+                  {dia.data.cerrado && <span className="marca" style={{marginLeft:8}}>cerrado</span>}
+                </span>
+                <button className="link-editar" style={{color:'#8a1d15'}} onClick={()=>borrarDia(dia.iso)}>Borrar día</button>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="card">
           <h3>Correcciones de la quincena ({todasCorrecciones.length})</h3>
           {todasCorrecciones.length===0 ? (
@@ -484,8 +570,49 @@ function App(){
           ))}
         </div>
 
+        {diasConDatos.length>0 && (
+          <div className="card">
+            <h3>Borrar un día</h3>
+            <p className="info-text">
+              Al borrar se descarga primero un respaldo en CSV. La información se elimina de la app y no se puede recuperar desde acá.
+            </p>
+            <div className="dias-borrar">
+              {diasConDatos.map(dia=>(
+                <button key={dia.iso} className="btn-cancel btn-small"
+                  onClick={()=>{setBorrarDia({iso:dia.iso,legible:isoALegible(dia.iso)});setBorrarPass('');setBorrarError('');}}>
+                  {dia.d}/{mes+1}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <button className="btn-primary" onClick={descargarCSV}>Descargar CSV de la quincena</button>
         <button className="btn-secondary" style={{marginTop:8}} onClick={()=>setAdminQuincena(null)}>Volver</button>
+
+        {borrarDia && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h2>Borrar el día {borrarDia.legible}</h2>
+              <p className="info-text">
+                Se va a eliminar toda la asistencia de ese día en {c.nombre}, incluidas las correcciones.
+                Antes de borrar se descarga un respaldo en CSV.
+              </p>
+              <p className="error" style={{marginBottom:12}}>Esta acción no se puede deshacer.</p>
+              <div className="form-group">
+                <label>Ingresá la clave de administrador</label>
+                <input type="password" value={borrarPass}
+                  onChange={e=>{setBorrarPass(e.target.value);setBorrarError('');}}
+                  placeholder="Clave"/>
+                {borrarError && <div className="error">{borrarError}</div>}
+              </div>
+              <div className="modal-buttons">
+                <button className="btn-cancel" onClick={()=>{setBorrarDia(null);setBorrarPass('');setBorrarError('');}}>Cancelar</button>
+                <button className="btn-ausencia" disabled={!borrarPass} onClick={confirmarBorrado}>Descargar y borrar</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -497,6 +624,7 @@ function App(){
 
   const estadoEnLista = emp=>{
     if(tieneAusencia(emp)) return {txt:'Ausente',dis:true};
+    if(tieneART(emp)) return {txt:'ART',dis:true};
     if(tab==='entrada') return tieneEntrada(emp)?{txt:`Entrada ${reg(emp,'entrada').hora}`,dis:true}:{txt:'',dis:false};
     if(!tieneEntrada(emp)) return {txt:'Sin entrada',dis:true};
     if(tieneSalida(emp)) return {txt:`Salida ${reg(emp,'salida').hora}`,dis:true};
