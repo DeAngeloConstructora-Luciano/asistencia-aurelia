@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistencia Obra - Aurelia</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        :root {
+            --color-beige: #F2F0EA;
+            --color-verde: #0F6E56;
+            --color-rojo: #A32D2D;
+            --color-ausencia: #BA2D1A;
+            --color-secundario: #404E50;
+            --color-oscuro: #2C3639;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--color-beige);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1rem;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        label {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="time"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 16px;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--color-oscuro);
+            box-shadow: 0 0 0 2px rgba(44, 54, 57, 0.1);
+        }
+
+        button {
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: var(--color-oscuro);
+            color: white;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: #1a2022;
+        }
+
+        .btn-entrada {
+            background-color: var(--color-verde);
+            color: white;
+        }
+
+        .btn-entrada:hover {
+            background-color: #085041;
+        }
+
+        .btn-salida {
+            background-color: var(--color-rojo);
+            color: white;
+        }
+
+        .btn-salida:hover {
+            background-color: #791F1F;
+        }
+
+        .btn-ausencia {
+            background-color: var(--color-ausencia);
+            color: white;
+        }
+
+        .btn-ausencia:hover {
+            background-color: #8a1d15;
+        }
+
+        .btn-secondary {
+            background-color: var(--color-secundario);
+            border: none;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background-color: #2f3a3d;
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 13px;
+            margin: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .tab-button {
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            background-color: #f0f0f0;
+            border: 0.5px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .tab-button.active {
+            background-color: var(--color-oscuro);
+            color: white;
+            border-color: var(--color-oscuro);
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 1rem;
+        }
+
+        .button-grid-full {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+
+        .error {
+            color: #d32f2f;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .success {
+            color: var(--color-verde);
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .employee-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 0.5px solid #ddd;
+            border-radius: 6px;
+            background: white;
+        }
+
+        .employee-item {
+            width: 100%;
+            padding: 10px 12px;
+            margin: 0;
+            border: none;
+            border-bottom: 0.5px solid #eee;
+            text-align: left;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .employee-item:last-child {
+            border-bottom: none;
+        }
+
+        .employee-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .employee-item.selected {
+            background-color: #e3f2fd;
+            color: #185FA5;
+            font-weight: 500;
+            border-left: 3px solid #185FA5;
+        }
+
+        .registros-list {
+            background-color: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: 0.5px solid #ddd;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 13px;
+            margin-bottom: 1rem;
+        }
+
+        .registro-item {
+            padding: 8px 0;
+            border-bottom: 0.5px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .registro-item:last-child {
+            border-bottom: none;
+        }
+
+        .entrada-badge {
+            color: var(--color-verde);
+            font-weight: 500;
+        }
+
+        .salida-badge {
+            color: var(--color-rojo);
+            font-weight: 500;
+        }
+
+        .ausencia-badge {
+            color: var(--color-ausencia);
+            font-weight: 500;
+        }
+
+        .resumen-card {
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .resumen-tabla {
+            width: 100%;
+            font-size: 13px;
+            border-collapse: collapse;
+        }
+
+        .resumen-tabla td {
+            padding: 8px 0;
+            border-bottom: 0.5px solid #eee;
+        }
+
+        .resumen-tabla td:nth-child(2),
+        .resumen-tabla td:nth-child(3) {
+            text-align: center;
+            color: #666;
+        }
+
+        .resumen-fila-incompleta {
+            background-color: #fff3e0;
+        }
+
+        .resumen-fila-ausencia {
+            background-color: #f3e5f5;
+        }
+
+        .badge-faltantes {
+            background-color: #fce4ec;
+            border: 0.5px solid #f48fb1;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .badge-titulo {
+            font-size: 13px;
+            font-weight: 500;
+            color: #c2185b;
+            margin: 0 0 8px 0;
+        }
+
+        .badge-item {
+            font-size: 13px;
+            margin: 4px 0;
+            color: #c2185b;
+        }
+
+        .fecha-info {
+            font-size: 13px;
+            color: #666;
+            margin: 0;
+        }
+
+        .resumen-header {
+            margin-bottom: 1rem;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #666;
+            margin: 0 0 8px 0;
+        }
+
+        .volver-btn {
+            margin-bottom: 1rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            margin-bottom: 1rem;
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 1.5rem;
+        }
+
+        .btn-cancel {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background-color: #bbb;
+        }
+
+        .disabled-btn {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .admin-panel {
+            padding: 1rem;
+        }
+
+        .admin-obras {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .obra-card {
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+        }
+
+        .obra-card:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dias-listado {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .dia-item {
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .dia-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .profile-button {
+            background: var(--color-secundario);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-button:hover {
+            background-color: #2f3a3d;
+        }
+
+        .profile-popup {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border: 0.5px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 999;
+            min-width: 200px;
+        }
+
+        .profile-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const OBRAS_CONFIG = {
+            aurelia: {
+                nombre: 'Edificio Aurelia',
+                password: 'aurelia634',
+                mail: 'adm.oficina.rio4@gmail.com',
+                empleados: [
+                    'CORIA JOSÉ ENRIQUE',
+                    'IVO FRANCISCO',
+                    'IVO FRANCO',
+                    'IVO NICOLAS AGUSTIN',
+                    'OLGUIN GIULIANO',
+                    'PEREYRA GALLARDO',
+                    'RODRIGUEZ SANTIAGO',
+                    'VILLARREAL MARCOS'
+                ].sort()
+            }
+        };
+
+        function AsistenciaApp() {
+            const [page, setPage] = useState('login'); // login, capataz, admin
+            const [obra, setObra] = useState(null);
+            const [passwordInput, setPasswordInput] = useState('');
+            const [passwordError, setPasswordError] = useState('');
+            const [tabActivo, setTabActivo] = useState('entrada'); // entrada, salida
+            const [registros, setRegistros] = useState([]);
+            const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState('');
+            const [busqueda, setBusqueda] = useState('');
+            const [mostrarResumen, setMostrarResumen] = useState(false);
+            const [modalAbierto, setModalAbierto] = useState(false);
+            const [modalTipo, setModalTipo] = useState(''); // 'manual', 'ausencia', 'seleccionar-empleado'
+            const [empleadoModal, setEmpleadoModal] = useState('');
+            const [horaEntradaModal, setHoraEntradaModal] = useState('');
+            const [horaSalidaModal, setHoraSalidaModal] = useState('');
+            const [adminObraSeleccionada, setAdminObraSeleccionada] = useState(null);
+            const [adminVistaRegistros, setAdminVistaRegistros] = useState(null);
+            const [mostrarPerfil, setMostrarPerfil] = useState(false);
+
+            const hoy = new Date().toLocaleDateString('es-AR');
+            const numeroWsp = '543584173969';
+
+            // Cargar datos desde localStorage
+            useEffect(() => {
+                const datosGuardados = localStorage.getItem(`asistencia_aurelia_${hoy}`);
+                if (datosGuardados) {
+                    try {
+                        const datos = JSON.parse(datosGuardados);
+                        setRegistros(datos);
+                    } catch (e) {
+                        console.error('Error cargando datos:', e);
+                    }
+                }
+            }, [hoy]);
+
+            // Guardar registros en localStorage
+            useEffect(() => {
+                if (obra && registros.length >= 0) {
+                    localStorage.setItem(`asistencia_aurelia_${hoy}`, JSON.stringify(registros));
+                }
+            }, [registros, obra]);
+
+            const handleLogin = (e) => {
+                e.preventDefault();
+                
+                if (passwordInput === OBRAS_CONFIG.aurelia.password) {
+                    setObra('aurelia');
+                    setPage('capataz');
+                    setPasswordError('');
+                    setPasswordInput('');
+                } else if (passwordInput === 'admin1143') {
+                    setPage('admin');
+                    setPasswordError('');
+                    setPasswordInput('');
+                } else {
+                    setPasswordError('Contraseña incorrecta');
+                    setPasswordInput('');
+                }
+            };
+
+            // Verificar si empleado ya tiene entrada
+            const tieneEntrada = (empleado) => {
+                return registros.some(r => r.empleado === empleado && r.tipo === 'entrada');
+            };
+
+            // Verificar si empleado ya tiene salida
+            const tieneSalida = (empleado) => {
+                return registros.some(r => r.empleado === empleado && r.tipo === 'salida');
+            };
+
+            // Verificar si empleado está marcado como ausencia
+            const tieneAusencia = (empleado) => {
+                return registros.some(r => r.empleado === empleado && r.tipo === 'ausencia');
+            };
+
+            const handleEntrada = () => {
+                if (!empleadoSeleccionado) return;
+                if (tieneEntrada(empleadoSeleccionado)) {
+                    alert('Este empleado ya tiene registrada una entrada');
+                    return;
+                }
+
+                const ahora = new Date();
+                const hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+                setRegistros([...registros, {
+                    empleado: empleadoSeleccionado,
+                    tipo: 'entrada',
+                    hora: hora,
+                    timestamp: ahora.getTime()
+                }]);
+
+                setEmpleadoSeleccionado('');
+                setBusqueda('');
+            };
+
+            const handleSalida = () => {
+                if (!empleadoSeleccionado) return;
+                if (tieneSalida(empleadoSeleccionado)) {
+                    alert('Este empleado ya tiene registrada una salida');
+                    return;
+                }
+
+                const ahora = new Date();
+                const hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+                setRegistros([...registros, {
+                    empleado: empleadoSeleccionado,
+                    tipo: 'salida',
+                    hora: hora,
+                    timestamp: ahora.getTime()
+                }]);
+
+                setEmpleadoSeleccionado('');
+                setBusqueda('');
+            };
+
+            const handleAusencia = () => {
+                if (!empleadoSeleccionado) return;
+                if (tieneAusencia(empleadoSeleccionado)) {
+                    alert('Este empleado ya está marcado como ausencia');
+                    return;
+                }
+
+                setRegistros([...registros, {
+                    empleado: empleadoSeleccionado,
+                    tipo: 'ausencia',
+                    timestamp: new Date().getTime()
+                }]);
+
+                setEmpleadoSeleccionado('');
+                setBusqueda('');
+                setModalAbierto(false);
+            };
+
+            const handleAgregarManual = () => {
+                if (!empleadoModal || !horaEntradaModal || !horaSalidaModal) {
+                    alert('Completá todos los campos');
+                    return;
+                }
+
+                if (tieneEntrada(empleadoModal) || tieneSalida(empleadoModal)) {
+                    alert('Este empleado ya tiene registros');
+                    return;
+                }
+
+                const nuevoRegistro = [
+                    {
+                        empleado: empleadoModal,
+                        tipo: 'entrada',
+                        hora: horaEntradaModal
+                    },
+                    {
+                        empleado: empleadoModal,
+                        tipo: 'salida',
+                        hora: horaSalidaModal
+                    }
+                ];
+
+                setRegistros([...registros, ...nuevoRegistro]);
+                setEmpleadoModal('');
+                setHoraEntradaModal('');
+                setHoraSalidaModal('');
+                setModalAbierto(false);
+            };
+
+            const obtenerResumen = () => {
+                const resumen = {};
+                registros.forEach(r => {
+                    if (!resumen[r.empleado]) {
+                        resumen[r.empleado] = { entrada: null, salida: null, ausencia: false };
+                    }
+                    if (r.tipo === 'entrada') {
+                        resumen[r.empleado].entrada = r.hora;
+                    } else if (r.tipo === 'salida') {
+                        resumen[r.empleado].salida = r.hora;
+                    } else if (r.tipo === 'ausencia') {
+                        resumen[r.empleado].ausencia = true;
+                    }
+                });
+                return resumen;
+            };
+
+            const obtenerEmpleadosFaltantes = () => {
+                const config = OBRAS_CONFIG[obra];
+                const resumen = obtenerResumen();
+
+                return config.empleados.filter(emp => {
+                    const r = resumen[emp];
+                    if (!r) return true;
+                    if (r.ausencia) return false;
+                    return !r.entrada || !r.salida;
+                });
+            };
+
+            const puedenCerrarDia = () => {
+                const faltantes = obtenerEmpleadosFaltantes();
+                return faltantes.length === 0;
+            };
+
+            const handleCerrarDiaWsp = () => {
+                const config = OBRAS_CONFIG[obra];
+                const resumen = obtenerResumen();
+                const fechaHoy = new Date().toLocaleDateString('es-AR');
+
+                let mensaje = `*ASISTENCIA ${config.nombre.toUpperCase()}*\n`;
+                mensaje += `Fecha: ${fechaHoy}\n\n`;
+
+                config.empleados.forEach(emp => {
+                    const r = resumen[emp] || { entrada: '-', salida: '-', ausencia: false };
+                    if (r.ausencia) {
+                        mensaje += `${emp}: AUSENCIA\n`;
+                    } else {
+                        mensaje += `${emp}: ${r.entrada} - ${r.salida}\n`;
+                    }
+                });
+
+                const enlaceWsp = `https://wa.me/${numeroWsp}?text=${encodeURIComponent(mensaje)}`;
+                window.open(enlaceWsp);
+            };
+
+            const empleadosFiltrados = OBRAS_CONFIG[obra] ? OBRAS_CONFIG[obra].empleados.filter(e =>
+                e.toLowerCase().includes(busqueda.toLowerCase())
+            ) : [];
+
+            const faltantes = obra ? obtenerEmpleadosFaltantes() : [];
+            const resumen = obra ? obtenerResumen() : {};
+
+            // PAGE: LOGIN
+            if (page === 'login') {
+                return (
+                    <div className="container">
+                        <h1>Asistencia de Obra</h1>
+                        <form onSubmit={handleLogin}>
+                            <div className="form-group">
+                                <label>Ingresá la contraseña</label>
+                                <input
+                                    type="password"
+                                    value={passwordInput}
+                                    onChange={(e) => setPasswordInput(e.target.value)}
+                                    placeholder="Contraseña"
+                                />
+                                {passwordError && <div className="error">{passwordError}</div>}
+                            </div>
+                            <button type="submit" className="btn-primary">Entrar</button>
+                        </form>
+                    </div>
+                );
+            }
+
+            // PAGE: ADMIN
+            if (page === 'admin') {
+                if (!adminObraSeleccionada) {
+                    return (
+                        <div className="container">
+                            <h1>Panel Administrador</h1>
+                            <div className="admin-obras">
+                                {Object.entries(OBRAS_CONFIG).map(([key, config]) => (
+                                    <div key={key} className="obra-card" onClick={() => setAdminObraSeleccionada(key)}>
+                                        <h3>{config.nombre}</h3>
+                                        <p className="info-text">Seleccionar para ver registros</p>
+                                    </div>
+                                ))}
+                            </div>
+                            <button onClick={() => setPage('login')} className="btn-secondary" style={{ marginTop: '2rem' }}>
+                                Volver
+                            </button>
+                        </div>
+                    );
+                }
+
+                if (!adminVistaRegistros) {
+                    const config = OBRAS_CONFIG[adminObraSeleccionada];
+                    const dias = [];
+                    
+                    // Buscar todos los días con registros
+                    for (let i = 0; i < 30; i++) {
+                        const fecha = new Date();
+                        fecha.setDate(fecha.getDate() - i);
+                        const fechaStr = fecha.toLocaleDateString('es-AR');
+                        const datosExisten = localStorage.getItem(`asistencia_aurelia_${fechaStr}`);
+                        if (datosExisten) {
+                            dias.push({ fecha: fechaStr, data: JSON.parse(datosExisten) });
+                        }
+                    }
+
+                    return (
+                        <div className="container">
+                            <h2>{config.nombre}</h2>
+                            <p className="info-text">Seleccionar día para ver registros</p>
+                            
+                            <div className="dias-listado">
+                                {dias.map((dia) => (
+                                    <div key={dia.fecha} className="dia-item" onClick={() => setAdminVistaRegistros(dia)}>
+                                        {dia.fecha}
+                                    </div>
+                                ))}
+                            </div>
+
+                            {dias.length === 0 && (
+                                <p className="info-text" style={{ marginTop: '2rem', textAlign: 'center' }}>
+                                    No hay registros
+                                </p>
+                            )}
+
+                            <button onClick={() => setAdminObraSeleccionada(null)} className="btn-secondary" style={{ marginTop: '2rem' }}>
+                                Volver
+                            </button>
+                        </div>
+                    );
+                }
+
+                // Vista de registros específica
+                const config = OBRAS_CONFIG[adminObraSeleccionada];
+                const registrosDelDia = adminVistaRegistros.data || [];
+                const resumenAdmin = {};
+                
+                registrosDelDia.forEach(r => {
+                    if (!resumenAdmin[r.empleado]) {
+                        resumenAdmin[r.empleado] = { entrada: null, salida: null, ausencia: false };
+                    }
+                    if (r.tipo === 'entrada') {
+                        resumenAdmin[r.empleado].entrada = r.hora;
+                    } else if (r.tipo === 'salida') {
+                        resumenAdmin[r.empleado].salida = r.hora;
+                    } else if (r.tipo === 'ausencia') {
+                        resumenAdmin[r.empleado].ausencia = true;
+                    }
+                });
+
+                const descargarCSV = () => {
+                    let csv = `OBRA: ${config.nombre}\nFECHA: ${adminVistaRegistros.fecha}\n\n`;
+                    csv += `Empleado,Entrada,Salida,Ausencia\n`;
+
+                    config.empleados.forEach(empleado => {
+                        const r = resumenAdmin[empleado] || { entrada: '-', salida: '-', ausencia: false };
+                        csv += `"${empleado}","${r.entrada || '-'}","${r.salida || '-'}","${r.ausencia ? 'Sí' : 'No'}"\n`;
+                    });
+
+                    const element = document.createElement('a');
+                    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
+                    element.setAttribute('download', `asistencia-${adminVistaRegistros.fecha}.csv`);
+                    document.body.appendChild(element);
+                    element.click();
+                    document.body.removeChild(element);
+                };
+
+                return (
+                    <div className="container">
+                        <h2>{config.nombre}</h2>
+                        <p className="info-text">{adminVistaRegistros.fecha}</p>
+
+                        <div className="resumen-card">
+                            <table className="resumen-tabla">
+                                <tbody>
+                                    {config.empleados.map(emp => {
+                                        const r = resumenAdmin[emp] || { entrada: '-', salida: '-', ausencia: false };
+                                        let rowClass = '';
+                                        if (r.ausencia) {
+                                            rowClass = 'resumen-fila-ausencia';
+                                        } else if (r.entrada === '-' || r.salida === '-') {
+                                            rowClass = 'resumen-fila-incompleta';
+                                        }
+                                        return (
+                                            <tr key={emp} className={rowClass}>
+                                                <td>{emp}</td>
+                                                <td>{r.ausencia ? 'Ausencia' : r.entrada}</td>
+                                                <td>{r.ausencia ? '-' : r.salida}</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <button onClick={descargarCSV} className="btn-primary">
+                            Descargar CSV
+                        </button>
+
+                        <button onClick={() => setAdminVistaRegistros(null)} className="btn-secondary" style={{ marginTop: '8px' }}>
+                            Volver
+                        </button>
+                    </div>
+                );
+            }
+
+            // PAGE: CAPATAZ
+            return (
+                <div className="container">
+                    <div className="header-top">
+                        <div className="resumen-header" style={{ flex: 1 }}>
+                            <h2>{OBRAS_CONFIG[obra].nombre}</h2>
+                            <p className="fecha-info">
+                                {new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                            </p>
+                        </div>
+                        <div style={{ position: 'relative' }}>
+                            <button className="profile-button" onClick={() => setMostrarPerfil(!mostrarPerfil)}>
+                                👤
+                            </button>
+                            {mostrarPerfil && (
+                                <div className="profile-popup">
+                                    <p className="profile-name">Capataz Ramon Ivo</p>
+                                    <button
+                                        onClick={() => {
+                                            setObra(null);
+                                            setPage('login');
+                                            setRegistros([]);
+                                            setMostrarResumen(false);
+                                            setMostrarPerfil(false);
+                                        }}
+                                        className="btn-secondary"
+                                        style={{ width: '100%', padding: '8px' }}
+                                    >
+                                        Cerrar sesión
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {!mostrarResumen ? (
+                        <div>
+                            <div className="tabs">
+                                <button
+                                    className={`tab-button ${tabActivo === 'entrada' ? 'active' : ''}`}
+                                    onClick={() => setTabActivo('entrada')}
+                                >
+                                    Entrada
+                                </button>
+                                <button
+                                    className={`tab-button ${tabActivo === 'salida' ? 'active' : ''}`}
+                                    onClick={() => setTabActivo('salida')}
+                                >
+                                    Salida
+                                </button>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Buscá el empleado</label>
+                                <input
+                                    type="text"
+                                    value={busqueda}
+                                    onChange={(e) => setBusqueda(e.target.value)}
+                                    placeholder="Escribí un nombre"
+                                />
+                                <div className="employee-list">
+                                    {empleadosFiltrados.map((emp) => {
+                                        const tieneE = tieneEntrada(emp);
+                                        const tieneS = tieneSalida(emp);
+                                        const tieneA = tieneAusencia(emp);
+                                        let puedeSeleccionar = true;
+                                        let razon = '';
+
+                                        if (tabActivo === 'entrada' && tieneE) {
+                                            puedeSeleccionar = false;
+                                            razon = ' ✓ (entrada registrada)';
+                                        } else if (tabActivo === 'salida' && tieneS) {
+                                            puedeSeleccionar = false;
+                                            razon = ' ✓ (salida registrada)';
+                                        } else if (tieneA) {
+                                            puedeSeleccionar = false;
+                                            razon = ' - (ausencia)';
+                                        }
+
+                                        return (
+                                            <button
+                                                key={emp}
+                                                className={`employee-item ${empleadoSeleccionado === emp && puedeSeleccionar ? 'selected' : ''}`}
+                                                onClick={() => {
+                                                    if (puedeSeleccionar) {
+                                                        setEmpleadoSeleccionado(emp);
+                                                        setBusqueda('');
+                                                    }
+                                                }}
+                                                style={{ opacity: puedeSeleccionar ? 1 : 0.6 }}
+                                                disabled={!puedeSeleccionar}
+                                            >
+                                                {emp}{razon}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {empleadoSeleccionado && (
+                                <div>
+                                    {tabActivo === 'entrada' && (
+                                        <button onClick={handleEntrada} className="btn-entrada" style={{ width: '100%', marginTop: '1rem' }}>
+                                            Registrar Entrada
+                                        </button>
+                                    )}
+                                    {tabActivo === 'salida' && (
+                                        <div className="button-grid" style={{ marginTop: '1rem' }}>
+                                            <button onClick={handleSalida} className="btn-salida">
+                                                Registrar Salida
+                                            </button>
+                                            <button
+                                                onClick={handleAusencia}
+                                                className="btn-ausencia"
+                                            >
+                                                Ausencia
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {registros.length > 0 && (
+                                <>
+                                    <div className="registros-list">
+                                        <h3>Registros del día ({registros.length})</h3>
+                                        {registros.map((r, i) => (
+                                            <div key={i} className="registro-item">
+                                                <span>{r.empleado}</span>
+                                                {r.tipo === 'entrada' && <span className="entrada-badge">→ Entrada {r.hora}</span>}
+                                                {r.tipo === 'salida' && <span className="salida-badge">← Salida {r.hora}</span>}
+                                                {r.tipo === 'ausencia' && <span className="ausencia-badge">Ausencia</span>}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button onClick={() => setMostrarResumen(true)} className="btn-primary">
+                                        Ver resumen
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    ) : (
+                        <div>
+                            <button
+                                onClick={() => setMostrarResumen(false)}
+                                className="btn-secondary volver-btn"
+                            >
+                                ← Volver
+                            </button>
+
+                            <div className="resumen-card">
+                                <h3>Resumen del día</h3>
+                                <p className="info-text">
+                                    Registrados: {Object.keys(resumen).length} / {OBRAS_CONFIG[obra].empleados.length}
+                                </p>
+
+                                {faltantes.length > 0 && (
+                                    <div className="badge-faltantes">
+                                        <p className="badge-titulo">Falta completar ({faltantes.length}):</p>
+                                        {faltantes.map(emp => (
+                                            <p key={emp} className="badge-item">• {emp}</p>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <table className="resumen-tabla">
+                                    <tbody>
+                                        {OBRAS_CONFIG[obra].empleados.map(emp => {
+                                            const r = resumen[emp] || { entrada: '-', salida: '-', ausencia: false };
+                                            let rowClass = '';
+                                            if (r.ausencia) {
+                                                rowClass = 'resumen-fila-ausencia';
+                                            } else if (r.entrada === '-' || r.salida === '-') {
+                                                rowClass = 'resumen-fila-incompleta';
+                                            }
+                                            return (
+                                                <tr key={emp} className={rowClass}>
+                                                    <td>{emp}</td>
+                                                    <td>{r.ausencia ? 'Ausencia' : r.entrada}</td>
+                                                    <td>{r.ausencia ? '-' : r.salida}</td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div className="button-grid-full">
+                                <button
+                                    onClick={() => {
+                                        setModalTipo('manual');
+                                        setModalAbierto(true);
+                                    }}
+                                    className="btn-secondary btn-small"
+                                    style={{ width: '100%' }}
+                                >
+                                    Agregar horario manualmente
+                                </button>
+                                <button
+                                    onClick={handleCerrarDiaWsp}
+                                    className={puedenCerrarDia() ? 'btn-primary' : 'disabled-btn'}
+                                    style={{ width: '100%', marginTop: '1rem' }}
+                                    disabled={!puedenCerrarDia()}
+                                >
+                                    Cerrar día (enviar por WhatsApp)
+                                </button>
+                                {!puedenCerrarDia() && (
+                                    <p className="error" style={{ textAlign: 'center', marginTop: '8px' }}>
+                                        Completá todos los registros para cerrar
+                                    </p>
+                                )}
+                            </div>
+
+
+                        </div>
+                    )}
+
+                    {/* MODAL AGREGAR MANUAL */}
+                    {modalAbierto && modalTipo === 'manual' && (
+                        <div className="modal-overlay">
+                            <div className="modal">
+                                <h2>Agregar horario manualmente</h2>
+                                <div className="form-group">
+                                    <label>Empleado</label>
+                                    <select
+                                        value={empleadoModal}
+                                        onChange={(e) => setEmpleadoModal(e.target.value)}
+                                    >
+                                        <option value="">Seleccionar...</option>
+                                        {OBRAS_CONFIG[obra].empleados.map(emp => (
+                                            <option key={emp} value={emp} disabled={tieneEntrada(emp) || tieneSalida(emp)}>
+                                                {emp}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Hora Entrada</label>
+                                    <input
+                                        type="time"
+                                        value={horaEntradaModal}
+                                        onChange={(e) => setHoraEntradaModal(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Hora Salida</label>
+                                    <input
+                                        type="time"
+                                        value={horaSalidaModal}
+                                        onChange={(e) => setHoraSalidaModal(e.target.value)}
+                                    />
+                                </div>
+                                <div className="modal-buttons">
+                                    <button
+                                        onClick={() => {
+                                            setModalAbierto(false);
+                                            setEmpleadoModal('');
+                                            setHoraEntradaModal('');
+                                            setHoraSalidaModal('');
+                                        }}
+                                        className="btn-cancel"
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button onClick={handleAgregarManual} className="btn-entrada">
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<AsistenciaApp />);
+    </script>
+</body>
+</html>
