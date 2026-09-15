@@ -1,1186 +1,736 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistencia Obra - Aurelia</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <style>
-        :root {
-            --color-beige: #F2F0EA;
-            --color-verde: #0F6E56;
-            --color-rojo: #A32D2D;
-            --color-ausencia: #BA2D1A;
-            --color-secundario: #404E50;
-            --color-oscuro: #2C3639;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--color-beige);
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 1rem;
-            min-height: 100vh;
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: 500;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        h2 {
-            font-size: 20px;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        h3 {
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 12px;
-        }
-
-        label {
-            font-size: 14px;
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        input[type="text"],
-        input[type="password"],
-        input[type="time"],
-        select {
-            width: 100%;
-            padding: 10px 12px;
-            font-size: 16px;
-            border: 0.5px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            background: white;
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--color-oscuro);
-            box-shadow: 0 0 0 2px rgba(44, 54, 57, 0.1);
-        }
-
-        button {
-            padding: 12px;
-            font-size: 16px;
-            font-weight: 500;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background-color: var(--color-oscuro);
-            color: white;
-            width: 100%;
-            margin-top: 8px;
-        }
-
-        .btn-primary:hover {
-            background-color: #1a2022;
-        }
-
-        .btn-entrada {
-            background-color: var(--color-verde);
-            color: white;
-        }
-
-        .btn-entrada:hover {
-            background-color: #085041;
-        }
-
-        .btn-salida {
-            background-color: var(--color-rojo);
-            color: white;
-        }
-
-        .btn-salida:hover {
-            background-color: #791F1F;
-        }
-
-        .btn-ausencia {
-            background-color: var(--color-ausencia);
-            color: white;
-        }
-
-        .btn-ausencia:hover {
-            background-color: #8a1d15;
-        }
-
-        .btn-secondary {
-            background-color: var(--color-secundario);
-            border: none;
-            color: white;
-            width: 100%;
-        }
-
-        .btn-secondary:hover {
-            background-color: #2f3a3d;
-        }
-
-        .btn-small {
-            padding: 8px 12px;
-            font-size: 13px;
-            margin: 4px;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .tabs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 1rem;
-        }
-
-        .tab-button {
-            padding: 10px;
-            font-size: 14px;
-            font-weight: 500;
-            background-color: #f0f0f0;
-            border: 0.5px solid #ddd;
-            border-radius: 6px;
-            cursor: pointer;
-            color: #666;
-        }
-
-        .tab-button.active {
-            background-color: var(--color-oscuro);
-            color: white;
-            border-color: var(--color-oscuro);
-        }
-
-        .button-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 1rem;
-        }
-
-        .button-grid-full {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 1rem;
-        }
-
-        .error {
-            color: #d32f2f;
-            font-size: 13px;
-            margin-top: 6px;
-        }
-
-        .success {
-            color: var(--color-verde);
-            font-size: 13px;
-            margin-top: 6px;
-        }
-
-        .employee-list {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 0.5px solid #ddd;
-            border-radius: 6px;
-            background: white;
-        }
-
-        .employee-item {
-            width: 100%;
-            padding: 10px 12px;
-            margin: 0;
-            border: none;
-            border-bottom: 0.5px solid #eee;
-            text-align: left;
-            background: white;
-            color: #333;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .employee-item:last-child {
-            border-bottom: none;
-        }
-
-        .employee-item:hover {
-            background-color: #f5f5f5;
-        }
-
-        .employee-item.selected {
-            background-color: #e3f2fd;
-            color: #185FA5;
-            font-weight: 500;
-            border-left: 3px solid #185FA5;
-        }
-
-        .registros-list {
-            background-color: white;
-            padding: 12px;
-            border-radius: 8px;
-            border: 0.5px solid #ddd;
-            max-height: 300px;
-            overflow-y: auto;
-            font-size: 13px;
-            margin-bottom: 1rem;
-        }
-
-        .registro-item {
-            padding: 8px 0;
-            border-bottom: 0.5px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .registro-item:last-child {
-            border-bottom: none;
-        }
-
-        .entrada-badge {
-            color: var(--color-verde);
-            font-weight: 500;
-        }
-
-        .salida-badge {
-            color: var(--color-rojo);
-            font-weight: 500;
-        }
-
-        .ausencia-badge {
-            color: var(--color-ausencia);
-            font-weight: 500;
-        }
-
-        .resumen-card {
-            background: white;
-            border: 0.5px solid #ddd;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .resumen-tabla {
-            width: 100%;
-            font-size: 13px;
-            border-collapse: collapse;
-        }
-
-        .resumen-tabla td {
-            padding: 8px 0;
-            border-bottom: 0.5px solid #eee;
-        }
-
-        .resumen-tabla td:nth-child(2),
-        .resumen-tabla td:nth-child(3) {
-            text-align: center;
-            color: #666;
-        }
-
-        .resumen-fila-incompleta {
-            background-color: #fff3e0;
-        }
-
-        .resumen-fila-ausencia {
-            background-color: #f3e5f5;
-        }
-
-        .badge-faltantes {
-            background-color: #fce4ec;
-            border: 0.5px solid #f48fb1;
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 1rem;
-        }
-
-        .badge-titulo {
-            font-size: 13px;
-            font-weight: 500;
-            color: #c2185b;
-            margin: 0 0 8px 0;
-        }
-
-        .badge-item {
-            font-size: 13px;
-            margin: 4px 0;
-            color: #c2185b;
-        }
-
-        .fecha-info {
-            font-size: 13px;
-            color: #666;
-            margin: 0;
-        }
-
-        .resumen-header {
-            margin-bottom: 1rem;
-        }
-
-        .info-text {
-            font-size: 13px;
-            color: #666;
-            margin: 0 0 8px 0;
-        }
-
-        .volver-btn {
-            margin-bottom: 1rem;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            max-width: 400px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal h2 {
-            margin-bottom: 1rem;
-        }
-
-        .modal-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 1.5rem;
-        }
-
-        .btn-cancel {
-            background-color: #ccc;
-            color: #333;
-        }
-
-        .btn-cancel:hover {
-            background-color: #bbb;
-        }
-
-        .disabled-btn {
-            background-color: #ccc;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .admin-panel {
-            padding: 1rem;
-        }
-
-        .admin-obras {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-
-        .obra-card {
-            background: white;
-            border: 0.5px solid #ddd;
-            border-radius: 8px;
-            padding: 1rem;
-            cursor: pointer;
-        }
-
-        .obra-card:hover {
-            background-color: #f5f5f5;
-        }
-
-        .dias-listado {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .dia-item {
-            background: white;
-            border: 0.5px solid #ddd;
-            border-radius: 6px;
-            padding: 8px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .dia-item:hover {
-            background-color: #f5f5f5;
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .profile-button {
-            background: var(--color-secundario);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .profile-button:hover {
-            background-color: #2f3a3d;
-        }
-
-        .profile-popup {
-            position: absolute;
-            top: 50px;
-            right: 0;
-            background: white;
-            border: 0.5px solid #ddd;
-            border-radius: 8px;
-            padding: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            z-index: 999;
-            min-width: 200px;
-        }
-
-        .profile-name {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 12px;
-            color: #333;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asistencia Obra - Aurelia</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+:root{
+  --beige:#F2F0EA;
+  --verde:#0F6E56;
+  --rojo:#A32D2D;
+  --ausencia:#BA2D1A;
+  --secundario:#404E50;
+  --oscuro:#2C3639;
+  --amarillo:#FFF3C4;
+  --amarillo-borde:#E6C200;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--beige);color:#2C3639;line-height:1.5;}
+.container{max-width:600px;margin:0 auto;padding:1rem;min-height:100vh;}
+.container-wide{max-width:1100px;margin:0 auto;padding:1rem;min-height:100vh;}
+h1{font-size:22px;font-weight:600;margin-bottom:1.5rem;text-align:center;}
+h2{font-size:19px;font-weight:600;}
+h3{font-size:15px;font-weight:600;margin-bottom:10px;}
+label{font-size:13px;display:block;margin-bottom:5px;font-weight:600;}
+input,select{width:100%;padding:10px 12px;font-size:16px;border:1px solid #d5d2c8;border-radius:8px;margin-bottom:8px;background:#fff;font-family:inherit;}
+input:focus,select:focus{outline:none;border-color:var(--oscuro);}
+button{padding:12px;font-size:15px;font-weight:600;border:none;border-radius:8px;cursor:pointer;font-family:inherit;}
+button:active{transform:scale(.98);}
+button:disabled{opacity:.45;cursor:not-allowed;}
+.btn-primary{background:var(--oscuro);color:#fff;width:100%;}
+.btn-entrada{background:var(--verde);color:#fff;}
+.btn-salida{background:var(--rojo);color:#fff;}
+.btn-ausencia{background:var(--ausencia);color:#fff;}
+.btn-secondary{background:var(--secundario);color:#fff;width:100%;}
+.btn-cancel{background:#c9c5ba;color:#2C3639;}
+.btn-small{padding:9px 12px;font-size:13px;}
+.form-group{margin-bottom:1rem;}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;gap:10px;}
+.profile-button{background:var(--secundario);color:#fff;border-radius:50%;width:42px;height:42px;font-size:18px;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;}
+.profile-popup{position:absolute;top:50px;right:0;background:#fff;border:1px solid #d5d2c8;border-radius:10px;padding:14px;box-shadow:0 4px 14px rgba(0,0,0,.12);z-index:999;min-width:210px;}
+.profile-name{font-size:14px;font-weight:600;margin-bottom:10px;}
+.fecha-info{font-size:13px;color:#6b6b6b;text-transform:capitalize;}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;}
+.tab-button{background:#e3e0d7;border:1px solid #d5d2c8;color:#6b6b6b;padding:11px;font-size:14px;}
+.tab-button.active{background:var(--oscuro);color:#fff;border-color:var(--oscuro);}
+.employee-list{max-height:230px;overflow-y:auto;border:1px solid #d5d2c8;border-radius:8px;background:#fff;}
+.employee-item{width:100%;padding:11px 12px;border:none;border-bottom:1px solid #eeebe3;text-align:left;background:#fff;font-size:14px;font-weight:500;border-radius:0;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.employee-item:last-child{border-bottom:none;}
+.employee-item.selected{background:#e4ecf5;border-left:3px solid var(--oscuro);}
+.employee-item .marca{font-size:12px;font-weight:600;color:#8a8a8a;white-space:nowrap;}
+.card{background:#fff;border:1px solid #d5d2c8;border-radius:10px;padding:14px;margin-bottom:1rem;}
+.registro-item{padding:9px 0;border-bottom:1px solid #eeebe3;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;}
+.registro-item:last-child{border-bottom:none;}
+.registro-nombre{font-weight:500;}
+.registro-derecha{display:flex;align-items:center;gap:10px;white-space:nowrap;}
+.entrada-badge{color:var(--verde);font-weight:600;}
+.salida-badge{color:var(--rojo);font-weight:600;}
+.ausencia-badge{color:var(--ausencia);font-weight:600;}
+.link-editar{background:none;border:none;color:var(--secundario);font-size:12px;text-decoration:underline;padding:2px 4px;font-weight:600;}
+.tabla{width:100%;font-size:13px;border-collapse:collapse;}
+.tabla td{padding:8px 4px;border-bottom:1px solid #eeebe3;}
+.tabla td:nth-child(2),.tabla td:nth-child(3){text-align:center;color:#555;}
+.fila-incompleta{background:#fdf1e3;}
+.fila-ausencia{background:#f7e9e6;}
+.fila-corregida{background:var(--amarillo);}
+.aviso{background:#fce9ee;border:1px solid #f0b6c5;border-radius:8px;padding:12px;margin-bottom:1rem;}
+.aviso-titulo{font-size:13px;font-weight:600;color:#a01840;margin-bottom:6px;}
+.aviso-item{font-size:13px;color:#a01840;}
+.aviso-ok{background:#e6f3ef;border:1px solid #9ccfbe;border-radius:8px;padding:12px;margin-bottom:1rem;font-size:13px;color:#0F6E56;font-weight:600;}
+.error{color:#c1272d;font-size:13px;margin-top:6px;}
+.info-text{font-size:13px;color:#6b6b6b;margin-bottom:8px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem;}
+.modal{background:#fff;border-radius:12px;padding:1.5rem;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;}
+.modal h2{margin-bottom:1rem;font-size:17px;}
+.modal-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1.25rem;}
+.btn-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1rem;}
+.stack{display:flex;flex-direction:column;gap:8px;margin-top:1rem;}
+.obra-card{background:#fff;border:1px solid #d5d2c8;border-radius:10px;padding:14px;cursor:pointer;margin-bottom:10px;}
+.quincena-card{background:#fff;border:1px solid #d5d2c8;border-radius:10px;padding:12px 14px;cursor:pointer;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:500;}
+.tabla-wrap{overflow-x:auto;background:#fff;border:1px solid #d5d2c8;border-radius:10px;margin-bottom:1rem;}
+.tabla-quincena{border-collapse:collapse;font-size:12px;min-width:100%;}
+.tabla-quincena th,.tabla-quincena td{border:1px solid #e4e1d8;padding:6px 7px;text-align:center;white-space:nowrap;}
+.tabla-quincena th{background:var(--oscuro);color:#fff;font-weight:600;position:sticky;top:0;}
+.tabla-quincena td.nombre{text-align:left;font-weight:600;background:#faf9f5;position:sticky;left:0;z-index:2;min-width:150px;}
+.tabla-quincena th.nombre{text-align:left;position:sticky;left:0;z-index:3;min-width:150px;}
+.celda-corregida{background:var(--amarillo);border:1px solid var(--amarillo-borde)!important;font-weight:600;}
+.celda-ausencia{background:#f7e9e6;color:var(--ausencia);font-weight:600;}
+.celda-vacia{color:#c0bcb2;}
+.correccion-item{font-size:13px;padding:9px 0;border-bottom:1px solid #eeebe3;}
+.correccion-item:last-child{border-bottom:none;}
+.correccion-meta{color:#6b6b6b;font-size:12px;}
+.leyenda{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#6b6b6b;margin-bottom:1rem;align-items:center;}
+.leyenda span{display:flex;align-items:center;gap:5px;}
+.cuadrito{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid #ccc;}
+.badge-cerrado{display:inline-block;background:var(--verde);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;margin-left:8px;vertical-align:middle;}
+</style>
 </head>
 <body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-
-        const OBRAS_CONFIG = {
-            aurelia: {
-                nombre: 'Edificio Aurelia',
-                password: 'aurelia634',
-                mail: 'adm.oficina.rio4@gmail.com',
-                empleados: [
-                    'CORIA JOSÉ ENRIQUE',
-                    'IVO FRANCISCO',
-                    'IVO FRANCO',
-                    'IVO NICOLAS AGUSTIN',
-                    'OLGUIN GIULIANO',
-                    'PEREYRA GALLARDO',
-                    'RODRIGUEZ SANTIAGO',
-                    'VILLARREAL MARCOS'
-                ].sort()
-            }
-        };
-
-        function AsistenciaApp() {
-            const [page, setPage] = useState('login'); // login, capataz, admin
-            const [obra, setObra] = useState(null);
-            const [passwordInput, setPasswordInput] = useState('');
-            const [passwordError, setPasswordError] = useState('');
-            const [tabActivo, setTabActivo] = useState('entrada'); // entrada, salida
-            const [registros, setRegistros] = useState([]);
-            const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState('');
-            const [busqueda, setBusqueda] = useState('');
-            const [mostrarResumen, setMostrarResumen] = useState(false);
-            const [modalAbierto, setModalAbierto] = useState(false);
-            const [modalTipo, setModalTipo] = useState(''); // 'manual', 'ausencia', 'seleccionar-empleado'
-            const [empleadoModal, setEmpleadoModal] = useState('');
-            const [horaEntradaModal, setHoraEntradaModal] = useState('');
-            const [horaSalidaModal, setHoraSalidaModal] = useState('');
-            const [adminObraSeleccionada, setAdminObraSeleccionada] = useState(null);
-            const [adminVistaRegistros, setAdminVistaRegistros] = useState(null);
-            const [mostrarPerfil, setMostrarPerfil] = useState(false);
-
-            const hoy = new Date().toLocaleDateString('es-AR');
-            const numeroWsp = '543584173969';
-
-            // Cargar datos desde localStorage
-            useEffect(() => {
-                const datosGuardados = localStorage.getItem(`asistencia_aurelia_${hoy}`);
-                if (datosGuardados) {
-                    try {
-                        const datos = JSON.parse(datosGuardados);
-                        setRegistros(datos);
-                    } catch (e) {
-                        console.error('Error cargando datos:', e);
-                    }
-                }
-            }, [hoy]);
-
-            // Guardar registros en localStorage
-            useEffect(() => {
-                if (obra && registros.length >= 0) {
-                    localStorage.setItem(`asistencia_aurelia_${hoy}`, JSON.stringify(registros));
-                }
-            }, [registros, obra]);
-
-            const handleLogin = (e) => {
-                e.preventDefault();
-                
-                if (passwordInput === OBRAS_CONFIG.aurelia.password) {
-                    setObra('aurelia');
-                    setPage('capataz');
-                    setPasswordError('');
-                    setPasswordInput('');
-                } else if (passwordInput === 'admin1143') {
-                    setPage('admin');
-                    setPasswordError('');
-                    setPasswordInput('');
-                } else {
-                    setPasswordError('Contraseña incorrecta');
-                    setPasswordInput('');
-                }
-            };
-
-            // Verificar si empleado ya tiene entrada
-            const tieneEntrada = (empleado) => {
-                return registros.some(r => r.empleado === empleado && r.tipo === 'entrada');
-            };
-
-            // Verificar si empleado ya tiene salida
-            const tieneSalida = (empleado) => {
-                return registros.some(r => r.empleado === empleado && r.tipo === 'salida');
-            };
-
-            // Verificar si empleado está marcado como ausencia
-            const tieneAusencia = (empleado) => {
-                return registros.some(r => r.empleado === empleado && r.tipo === 'ausencia');
-            };
-
-            const handleEntrada = () => {
-                if (!empleadoSeleccionado) return;
-                if (tieneEntrada(empleadoSeleccionado)) {
-                    alert('Este empleado ya tiene registrada una entrada');
-                    return;
-                }
-
-                const ahora = new Date();
-                const hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false });
-
-                setRegistros([...registros, {
-                    empleado: empleadoSeleccionado,
-                    tipo: 'entrada',
-                    hora: hora,
-                    timestamp: ahora.getTime()
-                }]);
-
-                setEmpleadoSeleccionado('');
-                setBusqueda('');
-            };
-
-            const handleSalida = () => {
-                if (!empleadoSeleccionado) return;
-                if (tieneSalida(empleadoSeleccionado)) {
-                    alert('Este empleado ya tiene registrada una salida');
-                    return;
-                }
-
-                const ahora = new Date();
-                const hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false });
-
-                setRegistros([...registros, {
-                    empleado: empleadoSeleccionado,
-                    tipo: 'salida',
-                    hora: hora,
-                    timestamp: ahora.getTime()
-                }]);
-
-                setEmpleadoSeleccionado('');
-                setBusqueda('');
-            };
-
-            const handleAusencia = () => {
-                if (!empleadoSeleccionado) return;
-                if (tieneAusencia(empleadoSeleccionado)) {
-                    alert('Este empleado ya está marcado como ausencia');
-                    return;
-                }
-
-                setRegistros([...registros, {
-                    empleado: empleadoSeleccionado,
-                    tipo: 'ausencia',
-                    timestamp: new Date().getTime()
-                }]);
-
-                setEmpleadoSeleccionado('');
-                setBusqueda('');
-                setModalAbierto(false);
-            };
-
-            const handleAgregarManual = () => {
-                if (!empleadoModal || !horaEntradaModal || !horaSalidaModal) {
-                    alert('Completá todos los campos');
-                    return;
-                }
-
-                if (tieneEntrada(empleadoModal) || tieneSalida(empleadoModal)) {
-                    alert('Este empleado ya tiene registros');
-                    return;
-                }
-
-                const nuevoRegistro = [
-                    {
-                        empleado: empleadoModal,
-                        tipo: 'entrada',
-                        hora: horaEntradaModal
-                    },
-                    {
-                        empleado: empleadoModal,
-                        tipo: 'salida',
-                        hora: horaSalidaModal
-                    }
-                ];
-
-                setRegistros([...registros, ...nuevoRegistro]);
-                setEmpleadoModal('');
-                setHoraEntradaModal('');
-                setHoraSalidaModal('');
-                setModalAbierto(false);
-            };
-
-            const obtenerResumen = () => {
-                const resumen = {};
-                registros.forEach(r => {
-                    if (!resumen[r.empleado]) {
-                        resumen[r.empleado] = { entrada: null, salida: null, ausencia: false };
-                    }
-                    if (r.tipo === 'entrada') {
-                        resumen[r.empleado].entrada = r.hora;
-                    } else if (r.tipo === 'salida') {
-                        resumen[r.empleado].salida = r.hora;
-                    } else if (r.tipo === 'ausencia') {
-                        resumen[r.empleado].ausencia = true;
-                    }
-                });
-                return resumen;
-            };
-
-            const obtenerEmpleadosFaltantes = () => {
-                const config = OBRAS_CONFIG[obra];
-                const resumen = obtenerResumen();
-
-                return config.empleados.filter(emp => {
-                    const r = resumen[emp];
-                    if (!r) return true;
-                    if (r.ausencia) return false;
-                    return !r.entrada || !r.salida;
-                });
-            };
-
-            const puedenCerrarDia = () => {
-                const faltantes = obtenerEmpleadosFaltantes();
-                return faltantes.length === 0;
-            };
-
-            const handleCerrarDiaWsp = () => {
-                const config = OBRAS_CONFIG[obra];
-                const resumen = obtenerResumen();
-                const fechaHoy = new Date().toLocaleDateString('es-AR');
-
-                let mensaje = `*ASISTENCIA ${config.nombre.toUpperCase()}*\n`;
-                mensaje += `Fecha: ${fechaHoy}\n\n`;
-
-                config.empleados.forEach(emp => {
-                    const r = resumen[emp] || { entrada: '-', salida: '-', ausencia: false };
-                    if (r.ausencia) {
-                        mensaje += `${emp}: AUSENCIA\n`;
-                    } else {
-                        mensaje += `${emp}: ${r.entrada} - ${r.salida}\n`;
-                    }
-                });
-
-                const enlaceWsp = `https://wa.me/${numeroWsp}?text=${encodeURIComponent(mensaje)}`;
-                window.open(enlaceWsp);
-            };
-
-            const empleadosFiltrados = OBRAS_CONFIG[obra] ? OBRAS_CONFIG[obra].empleados.filter(e =>
-                e.toLowerCase().includes(busqueda.toLowerCase())
-            ) : [];
-
-            const faltantes = obra ? obtenerEmpleadosFaltantes() : [];
-            const resumen = obra ? obtenerResumen() : {};
-
-            // PAGE: LOGIN
-            if (page === 'login') {
-                return (
-                    <div className="container">
-                        <h1>Asistencia de Obra</h1>
-                        <form onSubmit={handleLogin}>
-                            <div className="form-group">
-                                <label>Ingresá la contraseña</label>
-                                <input
-                                    type="password"
-                                    value={passwordInput}
-                                    onChange={(e) => setPasswordInput(e.target.value)}
-                                    placeholder="Contraseña"
-                                />
-                                {passwordError && <div className="error">{passwordError}</div>}
-                            </div>
-                            <button type="submit" className="btn-primary">Entrar</button>
-                        </form>
-                    </div>
-                );
-            }
-
-            // PAGE: ADMIN
-            if (page === 'admin') {
-                if (!adminObraSeleccionada) {
-                    return (
-                        <div className="container">
-                            <h1>Panel Administrador</h1>
-                            <div className="admin-obras">
-                                {Object.entries(OBRAS_CONFIG).map(([key, config]) => (
-                                    <div key={key} className="obra-card" onClick={() => setAdminObraSeleccionada(key)}>
-                                        <h3>{config.nombre}</h3>
-                                        <p className="info-text">Seleccionar para ver registros</p>
-                                    </div>
-                                ))}
-                            </div>
-                            <button onClick={() => setPage('login')} className="btn-secondary" style={{ marginTop: '2rem' }}>
-                                Volver
-                            </button>
-                        </div>
-                    );
-                }
-
-                if (!adminVistaRegistros) {
-                    const config = OBRAS_CONFIG[adminObraSeleccionada];
-                    const dias = [];
-                    
-                    // Buscar todos los días con registros
-                    for (let i = 0; i < 30; i++) {
-                        const fecha = new Date();
-                        fecha.setDate(fecha.getDate() - i);
-                        const fechaStr = fecha.toLocaleDateString('es-AR');
-                        const datosExisten = localStorage.getItem(`asistencia_aurelia_${fechaStr}`);
-                        if (datosExisten) {
-                            dias.push({ fecha: fechaStr, data: JSON.parse(datosExisten) });
-                        }
-                    }
-
-                    return (
-                        <div className="container">
-                            <h2>{config.nombre}</h2>
-                            <p className="info-text">Seleccionar día para ver registros</p>
-                            
-                            <div className="dias-listado">
-                                {dias.map((dia) => (
-                                    <div key={dia.fecha} className="dia-item" onClick={() => setAdminVistaRegistros(dia)}>
-                                        {dia.fecha}
-                                    </div>
-                                ))}
-                            </div>
-
-                            {dias.length === 0 && (
-                                <p className="info-text" style={{ marginTop: '2rem', textAlign: 'center' }}>
-                                    No hay registros
-                                </p>
-                            )}
-
-                            <button onClick={() => setAdminObraSeleccionada(null)} className="btn-secondary" style={{ marginTop: '2rem' }}>
-                                Volver
-                            </button>
-                        </div>
-                    );
-                }
-
-                // Vista de registros específica
-                const config = OBRAS_CONFIG[adminObraSeleccionada];
-                const registrosDelDia = adminVistaRegistros.data || [];
-                const resumenAdmin = {};
-                
-                registrosDelDia.forEach(r => {
-                    if (!resumenAdmin[r.empleado]) {
-                        resumenAdmin[r.empleado] = { entrada: null, salida: null, ausencia: false };
-                    }
-                    if (r.tipo === 'entrada') {
-                        resumenAdmin[r.empleado].entrada = r.hora;
-                    } else if (r.tipo === 'salida') {
-                        resumenAdmin[r.empleado].salida = r.hora;
-                    } else if (r.tipo === 'ausencia') {
-                        resumenAdmin[r.empleado].ausencia = true;
-                    }
-                });
-
-                const descargarCSV = () => {
-                    let csv = `OBRA: ${config.nombre}\nFECHA: ${adminVistaRegistros.fecha}\n\n`;
-                    csv += `Empleado,Entrada,Salida,Ausencia\n`;
-
-                    config.empleados.forEach(empleado => {
-                        const r = resumenAdmin[empleado] || { entrada: '-', salida: '-', ausencia: false };
-                        csv += `"${empleado}","${r.entrada || '-'}","${r.salida || '-'}","${r.ausencia ? 'Sí' : 'No'}"\n`;
-                    });
-
-                    const element = document.createElement('a');
-                    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
-                    element.setAttribute('download', `asistencia-${adminVistaRegistros.fecha}.csv`);
-                    document.body.appendChild(element);
-                    element.click();
-                    document.body.removeChild(element);
-                };
-
-                return (
-                    <div className="container">
-                        <h2>{config.nombre}</h2>
-                        <p className="info-text">{adminVistaRegistros.fecha}</p>
-
-                        <div className="resumen-card">
-                            <table className="resumen-tabla">
-                                <tbody>
-                                    {config.empleados.map(emp => {
-                                        const r = resumenAdmin[emp] || { entrada: '-', salida: '-', ausencia: false };
-                                        let rowClass = '';
-                                        if (r.ausencia) {
-                                            rowClass = 'resumen-fila-ausencia';
-                                        } else if (r.entrada === '-' || r.salida === '-') {
-                                            rowClass = 'resumen-fila-incompleta';
-                                        }
-                                        return (
-                                            <tr key={emp} className={rowClass}>
-                                                <td>{emp}</td>
-                                                <td>{r.ausencia ? 'Ausencia' : r.entrada}</td>
-                                                <td>{r.ausencia ? '-' : r.salida}</td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <button onClick={descargarCSV} className="btn-primary">
-                            Descargar CSV
-                        </button>
-
-                        <button onClick={() => setAdminVistaRegistros(null)} className="btn-secondary" style={{ marginTop: '8px' }}>
-                            Volver
-                        </button>
-                    </div>
-                );
-            }
-
-            // PAGE: CAPATAZ
-            return (
-                <div className="container">
-                    <div className="header-top">
-                        <div className="resumen-header" style={{ flex: 1 }}>
-                            <h2>{OBRAS_CONFIG[obra].nombre}</h2>
-                            <p className="fecha-info">
-                                {new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
-                            </p>
-                        </div>
-                        <div style={{ position: 'relative' }}>
-                            <button className="profile-button" onClick={() => setMostrarPerfil(!mostrarPerfil)}>
-                                👤
-                            </button>
-                            {mostrarPerfil && (
-                                <div className="profile-popup">
-                                    <p className="profile-name">Capataz Ramon Ivo</p>
-                                    <button
-                                        onClick={() => {
-                                            setObra(null);
-                                            setPage('login');
-                                            setRegistros([]);
-                                            setMostrarResumen(false);
-                                            setMostrarPerfil(false);
-                                        }}
-                                        className="btn-secondary"
-                                        style={{ width: '100%', padding: '8px' }}
-                                    >
-                                        Cerrar sesión
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {!mostrarResumen ? (
-                        <div>
-                            <div className="tabs">
-                                <button
-                                    className={`tab-button ${tabActivo === 'entrada' ? 'active' : ''}`}
-                                    onClick={() => setTabActivo('entrada')}
-                                >
-                                    Entrada
-                                </button>
-                                <button
-                                    className={`tab-button ${tabActivo === 'salida' ? 'active' : ''}`}
-                                    onClick={() => setTabActivo('salida')}
-                                >
-                                    Salida
-                                </button>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Buscá el empleado</label>
-                                <input
-                                    type="text"
-                                    value={busqueda}
-                                    onChange={(e) => setBusqueda(e.target.value)}
-                                    placeholder="Escribí un nombre"
-                                />
-                                <div className="employee-list">
-                                    {empleadosFiltrados.map((emp) => {
-                                        const tieneE = tieneEntrada(emp);
-                                        const tieneS = tieneSalida(emp);
-                                        const tieneA = tieneAusencia(emp);
-                                        let puedeSeleccionar = true;
-                                        let razon = '';
-
-                                        if (tabActivo === 'entrada' && tieneE) {
-                                            puedeSeleccionar = false;
-                                            razon = ' ✓ (entrada registrada)';
-                                        } else if (tabActivo === 'salida' && tieneS) {
-                                            puedeSeleccionar = false;
-                                            razon = ' ✓ (salida registrada)';
-                                        } else if (tieneA) {
-                                            puedeSeleccionar = false;
-                                            razon = ' - (ausencia)';
-                                        }
-
-                                        return (
-                                            <button
-                                                key={emp}
-                                                className={`employee-item ${empleadoSeleccionado === emp && puedeSeleccionar ? 'selected' : ''}`}
-                                                onClick={() => {
-                                                    if (puedeSeleccionar) {
-                                                        setEmpleadoSeleccionado(emp);
-                                                        setBusqueda('');
-                                                    }
-                                                }}
-                                                style={{ opacity: puedeSeleccionar ? 1 : 0.6 }}
-                                                disabled={!puedeSeleccionar}
-                                            >
-                                                {emp}{razon}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-
-                            {empleadoSeleccionado && (
-                                <div>
-                                    {tabActivo === 'entrada' && (
-                                        <div className="button-grid" style={{ marginTop: '1rem' }}>
-                                            <button onClick={handleEntrada} className="btn-entrada">
-                                                Registrar Entrada
-                                            </button>
-                                            <button
-                                                onClick={handleAusencia}
-                                                className="btn-ausencia"
-                                            >
-                                                Ausencia
-                                            </button>
-                                        </div>
-                                    )}
-                                    {tabActivo === 'salida' && (
-                                        <button onClick={handleSalida} className="btn-salida" style={{ width: '100%', marginTop: '1rem' }}>
-                                            Registrar Salida
-                                        </button>
-                                    )}
-                                </div>
-                            )}
-
-                            {registros.length > 0 && (
-                                <>
-                                    <div className="registros-list">
-                                        <h3>Registros del día ({registros.length})</h3>
-                                        {registros.map((r, i) => (
-                                            <div key={i} className="registro-item">
-                                                <span>{r.empleado}</span>
-                                                {r.tipo === 'entrada' && <span className="entrada-badge">→ Entrada {r.hora}</span>}
-                                                {r.tipo === 'salida' && <span className="salida-badge">← Salida {r.hora}</span>}
-                                                {r.tipo === 'ausencia' && <span className="ausencia-badge">Ausencia</span>}
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <button onClick={() => setMostrarResumen(true)} className="btn-primary">
-                                        Ver resumen
-                                    </button>
-                                </>
-                            )}
-                        </div>
-                    ) : (
-                        <div>
-                            <button
-                                onClick={() => setMostrarResumen(false)}
-                                className="btn-secondary volver-btn"
-                            >
-                                ← Volver
-                            </button>
-
-                            <div className="resumen-card">
-                                <h3>Resumen del día</h3>
-                                <p className="info-text">
-                                    Registrados: {Object.keys(resumen).length} / {OBRAS_CONFIG[obra].empleados.length}
-                                </p>
-
-                                {faltantes.length > 0 && (
-                                    <div className="badge-faltantes">
-                                        <p className="badge-titulo">Falta completar ({faltantes.length}):</p>
-                                        {faltantes.map(emp => (
-                                            <p key={emp} className="badge-item">• {emp}</p>
-                                        ))}
-                                    </div>
-                                )}
-
-                                <table className="resumen-tabla">
-                                    <tbody>
-                                        {OBRAS_CONFIG[obra].empleados.map(emp => {
-                                            const r = resumen[emp] || { entrada: '-', salida: '-', ausencia: false };
-                                            let rowClass = '';
-                                            if (r.ausencia) {
-                                                rowClass = 'resumen-fila-ausencia';
-                                            } else if (r.entrada === '-' || r.salida === '-') {
-                                                rowClass = 'resumen-fila-incompleta';
-                                            }
-                                            return (
-                                                <tr key={emp} className={rowClass}>
-                                                    <td>{emp}</td>
-                                                    <td>{r.ausencia ? 'Ausencia' : r.entrada}</td>
-                                                    <td>{r.ausencia ? '-' : r.salida}</td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div className="button-grid-full">
-                                <button
-                                    onClick={() => {
-                                        setModalTipo('manual');
-                                        setModalAbierto(true);
-                                    }}
-                                    className="btn-secondary btn-small"
-                                    style={{ width: '100%' }}
-                                >
-                                    Agregar horario manualmente
-                                </button>
-                                <button
-                                    onClick={handleCerrarDiaWsp}
-                                    className={puedenCerrarDia() ? 'btn-primary' : 'disabled-btn'}
-                                    style={{ width: '100%', marginTop: '1rem' }}
-                                    disabled={!puedenCerrarDia()}
-                                >
-                                    Cerrar día (enviar por WhatsApp)
-                                </button>
-                                {!puedenCerrarDia() && (
-                                    <p className="error" style={{ textAlign: 'center', marginTop: '8px' }}>
-                                        Completá todos los registros para cerrar
-                                    </p>
-                                )}
-                            </div>
-
-
-                        </div>
-                    )}
-
-                    {/* MODAL AGREGAR MANUAL */}
-                    {modalAbierto && modalTipo === 'manual' && (
-                        <div className="modal-overlay">
-                            <div className="modal">
-                                <h2>Agregar horario manualmente</h2>
-                                <div className="form-group">
-                                    <label>Empleado</label>
-                                    <select
-                                        value={empleadoModal}
-                                        onChange={(e) => setEmpleadoModal(e.target.value)}
-                                    >
-                                        <option value="">Seleccionar...</option>
-                                        {OBRAS_CONFIG[obra].empleados.map(emp => (
-                                            <option key={emp} value={emp} disabled={tieneEntrada(emp) || tieneSalida(emp)}>
-                                                {emp}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>Hora Entrada</label>
-                                    <input
-                                        type="time"
-                                        value={horaEntradaModal}
-                                        onChange={(e) => setHoraEntradaModal(e.target.value)}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Hora Salida</label>
-                                    <input
-                                        type="time"
-                                        value={horaSalidaModal}
-                                        onChange={(e) => setHoraSalidaModal(e.target.value)}
-                                    />
-                                </div>
-                                <div className="modal-buttons">
-                                    <button
-                                        onClick={() => {
-                                            setModalAbierto(false);
-                                            setEmpleadoModal('');
-                                            setHoraEntradaModal('');
-                                            setHoraSalidaModal('');
-                                        }}
-                                        className="btn-cancel"
-                                    >
-                                        Cancelar
-                                    </button>
-                                    <button onClick={handleAgregarManual} className="btn-entrada">
-                                        Guardar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-
-                </div>
-            );
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect} = React;
+
+const OBRAS_CONFIG = {
+  aurelia:{
+    nombre:'Edificio Aurelia',
+    password:'aurelia634',
+    capataz:'Capataz Ramon Ivo',
+    wsp:'543584173969',
+    empleados:[
+      'CORIA JOSÉ ENRIQUE','IVO FRANCISCO','IVO FRANCO','IVO NICOLAS AGUSTIN',
+      'OLGUIN GIULIANO','PEREYRA GALLARDO','RODRIGUEZ SANTIAGO','VILLARREAL MARCOS'
+    ].sort((a,b)=>a.localeCompare(b,'es'))
+  }
+};
+const ADMIN_PASS = 'admin1143';
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+// ---------- helpers de fecha / storage ----------
+const claveDia = (obraKey,d)=>`asist_${obraKey}_${d}`;           // d = 'YYYY-MM-DD'
+const hoyISO = ()=>{const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;};
+const isoALegible = iso=>{const [y,m,d]=iso.split('-');return `${d}/${m}/${y}`;};
+const horaAhora = ()=>{const n=new Date();return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;};
+const selloAhora = ()=>{const n=new Date();return `${isoALegible(hoyISO())} ${horaAhora()}`;};
+
+function leerDia(obraKey,iso){
+  try{
+    const raw = localStorage.getItem(claveDia(obraKey,iso));
+    if(!raw) return null;
+    const d = JSON.parse(raw);
+    return {registros:d.registros||[],correcciones:d.correcciones||[],cerrado:!!d.cerrado};
+  }catch(e){return null;}
+}
+function guardarDia(obraKey,iso,data){
+  try{localStorage.setItem(claveDia(obraKey,iso),JSON.stringify(data));}catch(e){console.error(e);}
+}
+
+function App(){
+  const [page,setPage] = useState('login');
+  const [obra,setObra] = useState(null);
+  const [pass,setPass] = useState('');
+  const [passError,setPassError] = useState('');
+  const [tab,setTab] = useState('entrada');
+  const [registros,setRegistros] = useState([]);
+  const [correcciones,setCorrecciones] = useState([]);
+  const [cerrado,setCerrado] = useState(false);
+  const [sel,setSel] = useState('');
+  const [busqueda,setBusqueda] = useState('');
+  const [vista,setVista] = useState('carga'); // carga | resumen
+  const [perfil,setPerfil] = useState(false);
+  const [modal,setModal] = useState(null); // {tipo:'manual'|'editar', ...}
+  const [mEmp,setMEmp] = useState('');
+  const [mHora,setMHora] = useState('');
+  const [mMotivo,setMMotivo] = useState('');
+  const [adminObra,setAdminObra] = useState(null);
+  const [adminQuincena,setAdminQuincena] = useState(null);
+
+  const iso = hoyISO();
+
+  // cargar el día al entrar a una obra
+  useEffect(()=>{
+    if(!obra) return;
+    const d = leerDia(obra,iso);
+    if(d){setRegistros(d.registros);setCorrecciones(d.correcciones);setCerrado(d.cerrado);}
+    else {setRegistros([]);setCorrecciones([]);setCerrado(false);}
+  },[obra,iso]);
+
+  // persistir
+  useEffect(()=>{
+    if(!obra) return;
+    guardarDia(obra,iso,{registros,correcciones,cerrado});
+  },[registros,correcciones,cerrado,obra,iso]);
+
+  const cfg = obra ? OBRAS_CONFIG[obra] : null;
+
+  const login = e=>{
+    e.preventDefault();
+    if(pass===OBRAS_CONFIG.aurelia.password){setObra('aurelia');setPage('capataz');setPass('');setPassError('');}
+    else if(pass===ADMIN_PASS){setPage('admin');setPass('');setPassError('');}
+    else {setPassError('Contraseña incorrecta');setPass('');}
+  };
+
+  // ---------- consultas de estado ----------
+  const reg = (emp,tipo)=>registros.find(r=>r.empleado===emp && r.tipo===tipo);
+  const tieneEntrada = emp=>!!reg(emp,'entrada');
+  const tieneSalida  = emp=>!!reg(emp,'salida');
+  const tieneAusencia= emp=>!!reg(emp,'ausencia');
+
+  const resumen = ()=>{
+    const r={};
+    cfg.empleados.forEach(e=>r[e]={entrada:null,salida:null,ausencia:false,corregido:false});
+    registros.forEach(x=>{
+      if(!r[x.empleado]) return;
+      if(x.tipo==='entrada') r[x.empleado].entrada=x.hora;
+      if(x.tipo==='salida')  r[x.empleado].salida=x.hora;
+      if(x.tipo==='ausencia')r[x.empleado].ausencia=true;
+      if(x.corregido) r[x.empleado].corregido=true;
+    });
+    correcciones.forEach(c=>{if(r[c.empleado]) r[c.empleado].corregido=true;});
+    return r;
+  };
+
+  const faltantes = ()=>{
+    const res = resumen();
+    return cfg.empleados.filter(e=>{
+      const x=res[e];
+      if(x.ausencia) return false;
+      return !x.entrada || !x.salida;
+    });
+  };
+  const puedeCerrar = ()=>faltantes().length===0 && !cerrado;
+
+  // ---------- acciones ----------
+  const agregar = (emp,tipo,hora,origen)=>{
+    setRegistros(prev=>[...prev,{empleado:emp,tipo,hora:hora||null,origen,corregido:false,sello:selloAhora()}]);
+  };
+
+  const registrarEntrada = ()=>{
+    if(!sel) return;
+    if(tieneAusencia(sel)){alert('Este empleado está marcado como ausencia. Eliminá la ausencia desde el resumen si vino a trabajar.');return;}
+    if(tieneEntrada(sel)){alert('Este empleado ya tiene entrada registrada.');return;}
+    agregar(sel,'entrada',horaAhora(),'auto');
+    setSel('');setBusqueda('');
+  };
+  const registrarSalida = ()=>{
+    if(!sel) return;
+    if(tieneAusencia(sel)){alert('Este empleado está marcado como ausencia.');return;}
+    if(!tieneEntrada(sel)){alert('No se puede cargar la salida: este empleado no tiene entrada registrada.');return;}
+    if(tieneSalida(sel)){alert('Este empleado ya tiene salida registrada.');return;}
+    agregar(sel,'salida',horaAhora(),'auto');
+    setSel('');setBusqueda('');
+  };
+  const registrarAusencia = ()=>{
+    if(!sel) return;
+    if(tieneEntrada(sel)||tieneSalida(sel)){alert('Este empleado ya tiene registros del día. Eliminalos desde el resumen antes de marcar ausencia.');return;}
+    if(tieneAusencia(sel)){alert('Este empleado ya está marcado como ausencia.');return;}
+    agregar(sel,'ausencia',null,'auto');
+    setSel('');setBusqueda('');
+  };
+
+  // carga manual desde la pestaña activa
+  const abrirManual = ()=>{setMEmp('');setMHora('');setMMotivo('');setModal({tipo:'manual',campo:tab});};
+  const guardarManual = ()=>{
+    if(!mEmp||!mHora){alert('Completá empleado y horario.');return;}
+    const campo = modal.campo;
+    if(tieneAusencia(mEmp)){alert('Ese empleado está marcado como ausencia.');return;}
+    if(campo==='entrada' && tieneEntrada(mEmp)){alert('Ese empleado ya tiene entrada.');return;}
+    if(campo==='salida'){
+      if(!tieneEntrada(mEmp)){alert('No se puede cargar la salida: falta la entrada de ese empleado.');return;}
+      if(tieneSalida(mEmp)){alert('Ese empleado ya tiene salida.');return;}
+    }
+    agregar(mEmp,campo,mHora,'manual');
+    setModal(null);setMEmp('');setMHora('');
+  };
+
+  // edición / eliminación con auditoría
+  const abrirEditar = (emp,tipo)=>{
+    const r = reg(emp,tipo);
+    setMEmp(emp);setMHora(r?r.hora||'':'');setMMotivo('');
+    setModal({tipo:'editar',empleado:emp,campo:tipo,valorAnterior:r?(r.hora||'Ausencia'):''});
+  };
+  const guardarEdicion = ()=>{
+    const {empleado,campo,valorAnterior} = modal;
+    if(campo!=='ausencia' && !mHora){alert('Ingresá el horario.');return;}
+    if(campo!=='ausencia' && mHora===valorAnterior){setModal(null);return;}
+    setRegistros(prev=>prev.map(r=>
+      (r.empleado===empleado && r.tipo===campo) ? {...r,hora:mHora,origen:'corregido',corregido:true,sello:selloAhora()} : r
+    ));
+    setCorrecciones(prev=>[...prev,{
+      empleado,campo,accion:'modificó',anterior:valorAnterior,nuevo:mHora,
+      motivo:mMotivo.trim(),sello:selloAhora()
+    }]);
+    setModal(null);setMHora('');setMMotivo('');
+  };
+  const eliminarRegistro = ()=>{
+    const {empleado,campo,valorAnterior} = modal;
+    // si borro la entrada y hay salida, la salida queda huérfana: la borro también
+    const borrarTambienSalida = campo==='entrada' && tieneSalida(empleado);
+    setRegistros(prev=>prev.filter(r=>{
+      if(r.empleado!==empleado) return true;
+      if(r.tipo===campo) return false;
+      if(borrarTambienSalida && r.tipo==='salida') return false;
+      return true;
+    }));
+    const nuevas=[{empleado,campo,accion:'eliminó',anterior:valorAnterior,nuevo:'—',motivo:mMotivo.trim(),sello:selloAhora()}];
+    if(borrarTambienSalida){
+      const s=reg(empleado,'salida');
+      nuevas.push({empleado,campo:'salida',accion:'eliminó',anterior:s?s.hora:'—',nuevo:'—',motivo:'Se eliminó junto con la entrada',sello:selloAhora()});
+    }
+    setCorrecciones(prev=>[...prev,...nuevas]);
+    setModal(null);setMHora('');setMMotivo('');
+  };
+
+  const cerrarDia = ()=>{
+    if(!puedeCerrar()) return;
+    if(!window.confirm('Una vez cerrado el día no se puede modificar. ¿Confirmás el cierre?')) return;
+    const res = resumen();
+    let msg = `*ASISTENCIA ${cfg.nombre.toUpperCase()}*\nFecha: ${isoALegible(iso)}\n\n`;
+    cfg.empleados.forEach(e=>{
+      const x=res[e];
+      if(x.ausencia) msg += `${e}: AUSENTE\n`;
+      else msg += `${e}: ${x.entrada} a ${x.salida}${x.corregido?' (corregido)':''}\n`;
+    });
+    if(correcciones.length) msg += `\nCorrecciones del día: ${correcciones.length}\n`;
+    setCerrado(true);
+    window.open(`https://wa.me/${cfg.wsp}?text=${encodeURIComponent(msg)}`,'_blank');
+  };
+
+  const cerrarSesion = ()=>{
+    setObra(null);setPage('login');setRegistros([]);setCorrecciones([]);setCerrado(false);
+    setVista('carga');setPerfil(false);setSel('');setBusqueda('');setTab('entrada');
+  };
+
+  // ================= LOGIN =================
+  if(page==='login'){
+    return (
+      <div className="container">
+        <h1>Asistencia de Obra</h1>
+        <form onSubmit={login}>
+          <div className="form-group">
+            <label>Ingresá la contraseña</label>
+            <input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="Contraseña"/>
+            {passError && <div className="error">{passError}</div>}
+          </div>
+          <button type="submit" className="btn-primary">Entrar</button>
+        </form>
+      </div>
+    );
+  }
+
+  // ================= ADMIN =================
+  if(page==='admin'){
+    if(!adminObra){
+      return (
+        <div className="container">
+          <h1>Panel de administración</h1>
+          {Object.entries(OBRAS_CONFIG).map(([k,c])=>(
+            <div key={k} className="obra-card" onClick={()=>setAdminObra(k)}>
+              <h3 style={{marginBottom:2}}>{c.nombre}</h3>
+              <p className="info-text" style={{margin:0}}>{c.empleados.length} empleados · {c.capataz}</p>
+            </div>
+          ))}
+          <button className="btn-secondary" style={{marginTop:'1rem'}} onClick={()=>setPage('login')}>Salir</button>
+        </div>
+      );
+    }
+
+    const c = OBRAS_CONFIG[adminObra];
+
+    // armar lista de quincenas con datos (últimos 6 meses)
+    if(!adminQuincena){
+      const mapa = {};
+      const hoyD = new Date();
+      for(let i=0;i<190;i++){
+        const f = new Date(hoyD); f.setDate(f.getDate()-i);
+        const y=f.getFullYear(), m=f.getMonth(), d=f.getDate();
+        const isoF = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        if(localStorage.getItem(claveDia(adminObra,isoF))){
+          const q = d<=15?1:2;
+          const key = `${y}-${m}-${q}`;
+          if(!mapa[key]) mapa[key]={anio:y,mes:m,q,dias:0};
+          mapa[key].dias++;
         }
+      }
+      const lista = Object.values(mapa).sort((a,b)=> b.anio-a.anio || b.mes-a.mes || b.q-a.q);
+      return (
+        <div className="container">
+          <h2 style={{marginBottom:'.25rem'}}>{c.nombre}</h2>
+          <p className="info-text">Seleccioná la quincena</p>
+          {lista.length===0 && <p className="info-text">Todavía no hay registros cargados.</p>}
+          {lista.map(q=>(
+            <div key={`${q.anio}-${q.mes}-${q.q}`} className="quincena-card" onClick={()=>setAdminQuincena(q)}>
+              <span>{q.q===1?'1 al 15':'16 al fin de mes'} de {MESES[q.mes]} {q.anio}</span>
+              <span className="correccion-meta">{q.dias} día{q.dias>1?'s':''}</span>
+            </div>
+          ))}
+          <button className="btn-secondary" style={{marginTop:'1rem'}} onClick={()=>setAdminObra(null)}>Volver</button>
+        </div>
+      );
+    }
 
-        ReactDOM.createRoot(document.getElementById('root')).render(<AsistenciaApp />);
-    </script>
+    // ---- tabla de quincena ----
+    const {anio,mes,q} = adminQuincena;
+    const ultimoDia = new Date(anio,mes+1,0).getDate();
+    const desde = q===1?1:16;
+    const hasta = q===1?15:ultimoDia;
+    const dias = [];
+    for(let d=desde; d<=hasta; d++){
+      const isoF = `${anio}-${String(mes+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      dias.push({d,iso:isoF,data:leerDia(adminObra,isoF)});
+    }
+    const diasConDatos = dias.filter(x=>x.data);
+
+    const celdaDe = (dia,emp)=>{
+      if(!dia.data) return {texto:'',clase:'celda-vacia'};
+      const rs = dia.data.registros.filter(r=>r.empleado===emp);
+      if(!rs.length) return {texto:'—',clase:'celda-vacia'};
+      if(rs.some(r=>r.tipo==='ausencia')) return {texto:'AUS',clase:'celda-ausencia'};
+      const e = rs.find(r=>r.tipo==='entrada');
+      const s = rs.find(r=>r.tipo==='salida');
+      const corregido = rs.some(r=>r.corregido) || dia.data.correcciones.some(x=>x.empleado===emp);
+      return {texto:`${e?e.hora:'—'}\n${s?s.hora:'—'}`,clase:corregido?'celda-corregida':''};
+    };
+
+    const todasCorrecciones = [];
+    diasConDatos.forEach(dia=>{
+      dia.data.correcciones.forEach(x=>todasCorrecciones.push({...x,fecha:isoALegible(dia.iso)}));
+    });
+
+    const descargarCSV = ()=>{
+      let csv = `OBRA:,${c.nombre}\nQUINCENA:,${q===1?'1 al 15':'16 al '+ultimoDia} de ${MESES[mes]} ${anio}\n\n`;
+      csv += 'Empleado,' + diasConDatos.map(x=>`${x.d}/${mes+1} entrada,${x.d}/${mes+1} salida`).join(',') + '\n';
+      c.empleados.forEach(emp=>{
+        const fila = diasConDatos.map(dia=>{
+          const rs = dia.data.registros.filter(r=>r.empleado===emp);
+          if(rs.some(r=>r.tipo==='ausencia')) return 'AUSENTE,AUSENTE';
+          const e=rs.find(r=>r.tipo==='entrada'), s=rs.find(r=>r.tipo==='salida');
+          return `${e?e.hora:'-'},${s?s.hora:'-'}`;
+        });
+        csv += `"${emp}",${fila.join(',')}\n`;
+      });
+      if(todasCorrecciones.length){
+        csv += `\nCORRECCIONES\nFecha,Empleado,Campo,Acción,Anterior,Nuevo,Motivo,Registrado\n`;
+        todasCorrecciones.forEach(x=>{
+          csv += `${x.fecha},"${x.empleado}",${x.campo},${x.accion},${x.anterior},${x.nuevo},"${x.motivo||''}",${x.sello}\n`;
+        });
+      }
+      const a=document.createElement('a');
+      a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);
+      a.download=`asistencia-${adminObra}-${MESES[mes]}${anio}-q${q}.csv`;
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+    };
+
+    return (
+      <div className="container-wide">
+        <h2 style={{marginBottom:'.25rem'}}>{c.nombre}</h2>
+        <p className="info-text">Quincena {q===1?'1 al 15':`16 al ${ultimoDia}`} de {MESES[mes]} {anio}</p>
+
+        <div className="leyenda">
+          <span><i className="cuadrito" style={{background:'var(--amarillo)',borderColor:'var(--amarillo-borde)'}}></i> Corregido por el capataz</span>
+          <span><i className="cuadrito" style={{background:'#f7e9e6'}}></i> Ausente</span>
+          <span><i className="cuadrito" style={{background:'#fff'}}></i> Fila superior: entrada · inferior: salida</span>
+        </div>
+
+        {diasConDatos.length===0 ? (
+          <p className="info-text">No hay días cargados en esta quincena.</p>
+        ) : (
+          <div className="tabla-wrap">
+            <table className="tabla-quincena">
+              <thead>
+                <tr>
+                  <th className="nombre">Empleado</th>
+                  {dias.map(x=><th key={x.d}>{x.d}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {c.empleados.map(emp=>(
+                  <tr key={emp}>
+                    <td className="nombre">{emp}</td>
+                    {dias.map(dia=>{
+                      const cel = celdaDe(dia,emp);
+                      return <td key={dia.d} className={cel.clase} style={{whiteSpace:'pre-line',lineHeight:1.35}}>{cel.texto}</td>;
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <div className="card">
+          <h3>Correcciones de la quincena ({todasCorrecciones.length})</h3>
+          {todasCorrecciones.length===0 ? (
+            <p className="info-text" style={{margin:0}}>No se registraron correcciones.</p>
+          ) : todasCorrecciones.map((x,i)=>(
+            <div key={i} className="correccion-item">
+              <div><strong>{x.fecha}</strong> — {x.empleado}: se {x.accion} la {x.campo} ({x.anterior} → {x.nuevo})</div>
+              {x.motivo && <div className="correccion-meta">Motivo: {x.motivo}</div>}
+              <div className="correccion-meta">Registrado el {x.sello}</div>
+            </div>
+          ))}
+        </div>
+
+        <button className="btn-primary" onClick={descargarCSV}>Descargar CSV de la quincena</button>
+        <button className="btn-secondary" style={{marginTop:8}} onClick={()=>setAdminQuincena(null)}>Volver</button>
+      </div>
+    );
+  }
+
+  // ================= CAPATAZ =================
+  const res = resumen();
+  const falt = faltantes();
+  const listaFiltrada = cfg.empleados.filter(e=>e.toLowerCase().includes(busqueda.toLowerCase()));
+
+  const estadoEnLista = emp=>{
+    if(tieneAusencia(emp)) return {txt:'Ausente',dis:true};
+    if(tab==='entrada') return tieneEntrada(emp)?{txt:`Entrada ${reg(emp,'entrada').hora}`,dis:true}:{txt:'',dis:false};
+    if(!tieneEntrada(emp)) return {txt:'Sin entrada',dis:true};
+    if(tieneSalida(emp)) return {txt:`Salida ${reg(emp,'salida').hora}`,dis:true};
+    return {txt:'',dis:false};
+  };
+
+  return (
+    <div className="container">
+      <div className="header-top">
+        <div>
+          <h2>{cfg.nombre}{cerrado && <span className="badge-cerrado">Día cerrado</span>}</h2>
+          <p className="fecha-info">{new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'})}</p>
+        </div>
+        <div style={{position:'relative'}}>
+          <button className="profile-button" onClick={()=>setPerfil(!perfil)}>👤</button>
+          {perfil && (
+            <div className="profile-popup">
+              <p className="profile-name">{cfg.capataz}</p>
+              <button className="btn-secondary btn-small" onClick={cerrarSesion}>Cerrar sesión</button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {cerrado ? (
+        <>
+          <div className="aviso-ok">El día {isoALegible(iso)} ya fue cerrado y enviado. No se puede modificar.</div>
+          <div className="card">
+            <h3>Resumen final</h3>
+            <table className="tabla"><tbody>
+              {cfg.empleados.map(e=>{
+                const x=res[e];
+                return (
+                  <tr key={e} className={x.ausencia?'fila-ausencia':(x.corregido?'fila-corregida':'')}>
+                    <td>{e}</td>
+                    <td>{x.ausencia?'Ausente':x.entrada}</td>
+                    <td>{x.ausencia?'—':x.salida}</td>
+                  </tr>
+                );
+              })}
+            </tbody></table>
+          </div>
+          {correcciones.length>0 && (
+            <div className="card">
+              <h3>Correcciones ({correcciones.length})</h3>
+              {correcciones.map((x,i)=>(
+                <div key={i} className="correccion-item">
+                  <div>{x.empleado}: se {x.accion} la {x.campo} ({x.anterior} → {x.nuevo})</div>
+                  {x.motivo && <div className="correccion-meta">Motivo: {x.motivo}</div>}
+                  <div className="correccion-meta">{x.sello}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      ) : vista==='carga' ? (
+        <>
+          <div className="tabs">
+            <button className={`tab-button ${tab==='entrada'?'active':''}`} onClick={()=>{setTab('entrada');setSel('');}}>Entrada</button>
+            <button className={`tab-button ${tab==='salida'?'active':''}`} onClick={()=>{setTab('salida');setSel('');}}>Salida</button>
+          </div>
+
+          <div className="form-group">
+            <label>Buscá el empleado</label>
+            <input type="text" value={busqueda} onChange={e=>setBusqueda(e.target.value)} placeholder="Escribí un nombre"/>
+            <div className="employee-list">
+              {listaFiltrada.map(emp=>{
+                const st = estadoEnLista(emp);
+                return (
+                  <button key={emp}
+                    className={`employee-item ${sel===emp?'selected':''}`}
+                    disabled={st.dis}
+                    style={{opacity:st.dis?.5:1}}
+                    onClick={()=>{if(!st.dis){setSel(emp);setBusqueda('');}}}>
+                    <span>{emp}</span>
+                    {st.txt && <span className="marca">{st.txt}</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {sel && tab==='entrada' && (
+            <div className="btn-grid2">
+              <button className="btn-entrada" onClick={registrarEntrada}>Registrar Entrada</button>
+              <button className="btn-ausencia" onClick={registrarAusencia}>Ausencia</button>
+            </div>
+          )}
+          {sel && tab==='salida' && (
+            <button className="btn-salida" style={{width:'100%',marginTop:'1rem'}} onClick={registrarSalida}>Registrar Salida</button>
+          )}
+
+          <button className="btn-secondary btn-small" style={{marginTop:'1rem'}} onClick={abrirManual}>
+            Cargar {tab} manualmente
+          </button>
+
+          {registros.length>0 && (
+            <div className="card" style={{marginTop:'1rem'}}>
+              <h3>Registros del día ({registros.length})</h3>
+              {registros.map((r,i)=>(
+                <div key={i} className="registro-item">
+                  <span className="registro-nombre">{r.empleado}</span>
+                  <span className="registro-derecha">
+                    {r.tipo==='entrada' && <span className="entrada-badge">Entrada {r.hora}</span>}
+                    {r.tipo==='salida' && <span className="salida-badge">Salida {r.hora}</span>}
+                    {r.tipo==='ausencia' && <span className="ausencia-badge">Ausente</span>}
+                    {r.corregido && <span className="marca">corregido</span>}
+                    <button className="link-editar" onClick={()=>abrirEditar(r.empleado,r.tipo)}>Modificar</button>
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <button className="btn-primary" style={{marginTop:'.5rem'}} onClick={()=>setVista('resumen')}>Ver resumen</button>
+        </>
+      ) : (
+        <>
+          <button className="btn-secondary btn-small" style={{marginBottom:'1rem'}} onClick={()=>setVista('carga')}>← Volver a cargar</button>
+
+          <div className="card">
+            <h3>Resumen del día</h3>
+            {falt.length>0 ? (
+              <div className="aviso">
+                <div className="aviso-titulo">Falta completar ({falt.length})</div>
+                {falt.map(e=><div key={e} className="aviso-item">• {e}</div>)}
+              </div>
+            ) : (
+              <div className="aviso-ok">Todos los empleados tienen entrada y salida o ausencia.</div>
+            )}
+            <table className="tabla"><tbody>
+              {cfg.empleados.map(e=>{
+                const x=res[e];
+                const clase = x.ausencia?'fila-ausencia':(x.corregido?'fila-corregida':((!x.entrada||!x.salida)?'fila-incompleta':''));
+                return (
+                  <tr key={e} className={clase}>
+                    <td>{e}</td>
+                    <td>{x.ausencia?'Ausente':(x.entrada||'—')}</td>
+                    <td>{x.ausencia?'—':(x.salida||'—')}</td>
+                  </tr>
+                );
+              })}
+            </tbody></table>
+          </div>
+
+          {correcciones.length>0 && (
+            <div className="card">
+              <h3>Correcciones del día ({correcciones.length})</h3>
+              {correcciones.map((x,i)=>(
+                <div key={i} className="correccion-item">
+                  <div>{x.empleado}: se {x.accion} la {x.campo} ({x.anterior} → {x.nuevo})</div>
+                  {x.motivo && <div className="correccion-meta">Motivo: {x.motivo}</div>}
+                  <div className="correccion-meta">{x.sello}</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <button className="btn-primary" disabled={!puedeCerrar()} onClick={cerrarDia}>
+            Cerrar día y enviar por WhatsApp
+          </button>
+          {!puedeCerrar() && <p className="error" style={{textAlign:'center'}}>Completá todos los registros para poder cerrar.</p>}
+        </>
+      )}
+
+      {/* MODAL CARGA MANUAL */}
+      {modal && modal.tipo==='manual' && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Cargar {modal.campo} manualmente</h2>
+            <div className="form-group">
+              <label>Empleado</label>
+              <select value={mEmp} onChange={e=>setMEmp(e.target.value)}>
+                <option value="">Seleccionar...</option>
+                {cfg.empleados.map(emp=>{
+                  let dis = tieneAusencia(emp);
+                  if(modal.campo==='entrada') dis = dis || tieneEntrada(emp);
+                  if(modal.campo==='salida')  dis = dis || !tieneEntrada(emp) || tieneSalida(emp);
+                  return <option key={emp} value={emp} disabled={dis}>{emp}{dis?' — no disponible':''}</option>;
+                })}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Hora de {modal.campo}</label>
+              <input type="time" value={mHora} onChange={e=>setMHora(e.target.value)}/>
+            </div>
+            <div className="modal-buttons">
+              <button className="btn-cancel" onClick={()=>setModal(null)}>Cancelar</button>
+              <button className={modal.campo==='entrada'?'btn-entrada':'btn-salida'} onClick={guardarManual}>Guardar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL EDITAR / ELIMINAR */}
+      {modal && modal.tipo==='editar' && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Modificar registro</h2>
+            <p className="info-text">
+              {modal.empleado} — {modal.campo === 'ausencia' ? 'Ausencia' : `${modal.campo} actual: ${modal.valorAnterior}`}
+            </p>
+
+            {modal.campo!=='ausencia' && (
+              <div className="form-group">
+                <label>Nuevo horario</label>
+                <input type="time" value={mHora} onChange={e=>setMHora(e.target.value)}/>
+              </div>
+            )}
+
+            <div className="form-group">
+              <label>Motivo de la corrección (opcional)</label>
+              <input type="text" value={mMotivo} onChange={e=>setMMotivo(e.target.value)} placeholder="Ej: cargué al empleado equivocado"/>
+            </div>
+
+            {modal.campo==='entrada' && tieneSalida(modal.empleado) && (
+              <p className="error" style={{marginBottom:8}}>Si eliminás la entrada también se elimina la salida de este empleado.</p>
+            )}
+
+            <div className="modal-buttons">
+              <button className="btn-cancel" onClick={()=>{setModal(null);setMMotivo('');}}>Cancelar</button>
+              <button className="btn-ausencia" onClick={eliminarRegistro}>Eliminar</button>
+            </div>
+            {modal.campo!=='ausencia' && (
+              <button className="btn-primary" style={{marginTop:10}} onClick={guardarEdicion}>Guardar cambio</button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
 </body>
 </html>
