@@ -1005,14 +1005,9 @@
                             {empleadoSeleccionado && (
                                 <div>
                                     {tabActivo === 'entrada' && (
-                                        <button onClick={handleEntrada} className="btn-entrada" style={{ width: '100%', marginTop: '1rem' }}>
-                                            Registrar Entrada
-                                        </button>
-                                    )}
-                                    {tabActivo === 'salida' && (
                                         <div className="button-grid" style={{ marginTop: '1rem' }}>
-                                            <button onClick={handleSalida} className="btn-salida">
-                                                Registrar Salida
+                                            <button onClick={handleEntrada} className="btn-entrada">
+                                                Registrar Entrada
                                             </button>
                                             <button
                                                 onClick={handleAusencia}
@@ -1021,6 +1016,11 @@
                                                 Ausencia
                                             </button>
                                         </div>
+                                    )}
+                                    {tabActivo === 'salida' && (
+                                        <button onClick={handleSalida} className="btn-salida" style={{ width: '100%', marginTop: '1rem' }}>
+                                            Registrar Salida
+                                        </button>
                                     )}
                                 </div>
                             )}
