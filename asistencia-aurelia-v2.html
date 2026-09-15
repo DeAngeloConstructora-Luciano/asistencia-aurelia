@@ -591,8 +591,8 @@ function App(){
         <button className="btn-secondary" style={{marginTop:8}} onClick={()=>setAdminQuincena(null)}>Volver</button>
 
         {borrarDia && (
-          <div className="modal-overlay">
-            <div className="modal">
+          <div className="modal-overlay" onClick={()=>{setBorrarDia(null);setBorrarPass('');setBorrarError('');}}>
+            <div className="modal" onClick={e=>e.stopPropagation()}>
               <h2>Borrar el día {borrarDia.legible}</h2>
               <p className="info-text">
                 Se va a eliminar toda la asistencia de ese día en {c.nombre}, incluidas las correcciones.
