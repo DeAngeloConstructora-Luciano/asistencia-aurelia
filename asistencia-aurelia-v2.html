@@ -13,7 +13,6 @@
   --verde:#0F6E56;
   --rojo:#A32D2D;
   --ausencia:#BA2D1A;
-  --art:#84211E;
   --secundario:#404E50;
   --oscuro:#2C3639;
   --amarillo:#FFF3C4;
@@ -36,7 +35,6 @@ button:disabled{opacity:.45;cursor:not-allowed;}
 .btn-entrada{background:var(--verde);color:#fff;}
 .btn-salida{background:var(--rojo);color:#fff;}
 .btn-ausencia{background:var(--ausencia);color:#fff;}
-.btn-art{background:var(--art);color:#fff;}
 .btn-borrar{background:#8a1d15;color:#fff;width:100%;}
 .btn-secondary{background:var(--secundario);color:#fff;width:100%;}
 .btn-cancel{background:#c9c5ba;color:#2C3639;}
@@ -63,14 +61,12 @@ button:disabled{opacity:.45;cursor:not-allowed;}
 .entrada-badge{color:var(--verde);font-weight:600;}
 .salida-badge{color:var(--rojo);font-weight:600;}
 .ausencia-badge{color:var(--ausencia);font-weight:600;}
-.art-badge{color:var(--art);font-weight:600;}
 .link-editar{background:none;border:none;color:var(--secundario);font-size:12px;text-decoration:underline;padding:2px 4px;font-weight:600;}
 .tabla{width:100%;font-size:13px;border-collapse:collapse;}
 .tabla td{padding:8px 4px;border-bottom:1px solid #eeebe3;}
 .tabla td:nth-child(2),.tabla td:nth-child(3){text-align:center;color:#555;}
 .fila-incompleta{background:#fdf1e3;}
 .fila-ausencia{background:#f7e9e6;}
-.fila-art{background:#efe4e3;}
 .fila-corregida{background:var(--amarillo);}
 .aviso{background:#fce9ee;border:1px solid #f0b6c5;border-radius:8px;padding:12px;margin-bottom:1rem;}
 .aviso-titulo{font-size:13px;font-weight:600;color:#a01840;margin-bottom:6px;}
@@ -84,27 +80,11 @@ button:disabled{opacity:.45;cursor:not-allowed;}
 .modal-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1.25rem;}
 .btn-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1rem;}
 .stack{display:flex;flex-direction:column;gap:8px;margin-top:1rem;}
-.obra-card{background:#fff;border:1px solid #d5d2c8;border-radius:10px;padding:14px;cursor:pointer;margin-bottom:10px;}
-.quincena-card{background:#fff;border:1px solid #d5d2c8;border-radius:10px;padding:12px 14px;cursor:pointer;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:500;}
-.tabla-wrap{overflow-x:auto;background:#fff;border:1px solid #d5d2c8;border-radius:10px;margin-bottom:1rem;}
-.tabla-quincena{border-collapse:collapse;font-size:12px;min-width:100%;}
-.tabla-quincena th,.tabla-quincena td{border:1px solid #e4e1d8;padding:6px 7px;text-align:center;white-space:nowrap;}
-.tabla-quincena th{background:var(--oscuro);color:#fff;font-weight:600;position:sticky;top:0;}
-.tabla-quincena td.nombre{text-align:left;font-weight:600;background:#faf9f5;position:sticky;left:0;z-index:2;min-width:150px;}
-.tabla-quincena th.nombre{text-align:left;position:sticky;left:0;z-index:3;min-width:150px;}
-.celda-corregida{background:var(--amarillo);border:1px solid var(--amarillo-borde)!important;font-weight:600;}
-.celda-ausencia{background:#f7e9e6;color:var(--ausencia);font-weight:600;}
-.celda-art{background:#efe4e3;color:var(--art);font-weight:600;}
-.celda-vacia{color:#c0bcb2;}
 .correccion-item{font-size:13px;padding:9px 0;border-bottom:1px solid #eeebe3;}
 .correccion-item:last-child{border-bottom:none;}
 .correccion-meta{color:#6b6b6b;font-size:12px;}
-.leyenda{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#6b6b6b;margin-bottom:1rem;align-items:center;}
-.leyenda span{display:flex;align-items:center;gap:5px;}
-.cuadrito{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid #ccc;}
 .badge-cerrado{display:inline-block;background:var(--verde);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;margin-left:8px;vertical-align:middle;}
-.dias-borrar{display:flex;flex-wrap:wrap;gap:8px;}
-.dias-borrar button{min-width:58px;}
+.pie-version{text-align:center;font-size:10px;color:#bdb9ae;margin-top:2rem;padding-bottom:1rem;letter-spacing:.5px;}
 </style>
 </head>
 <body>
@@ -120,12 +100,20 @@ const OBRAS_CONFIG = {
     wsp:'543584173969',
     empleados:[
       'CORIA JOSÉ ENRIQUE','IVO FRANCISCO','IVO FRANCO','IVO NICOLAS AGUSTIN',
-      'OLGUIN GIULIANO','PEREYRA GALLARDO','RODRIGUEZ SANTIAGO','VILLARREAL MARCOS'
+      'IVO RAMON','OLGUIN GIULIANO','PEREYRA GALLARDO','RODRIGUEZ SANTIAGO','VILLARREAL MARCOS'
+    ].sort((a,b)=>a.localeCompare(b,'es'))
+  },
+  oficina:{
+    nombre:'Oficina',
+    password:'ofi1143',
+    capataz:'',
+    wsp:'543584173969',
+    empleados:[
+      'ALDANA QUIÑONEZ','ANABELLA ORTIZ','ANTONELLA PRIOU','LUCIANO VILLARREAL','MONICA PEREZ'
     ].sort((a,b)=>a.localeCompare(b,'es'))
   }
 };
-const ADMIN_PASS = 'admin1143';
-const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const VERSION = 'beta';
 
 // ---------- helpers de fecha / storage ----------
 const claveDia = (obraKey,d)=>`asist_${obraKey}_${d}`;           // d = 'YYYY-MM-DD'
@@ -163,12 +151,6 @@ function App(){
   const [mEmp,setMEmp] = useState('');
   const [mHora,setMHora] = useState('');
   const [mMotivo,setMMotivo] = useState('');
-  const [adminObra,setAdminObra] = useState(null);
-  const [adminQuincena,setAdminQuincena] = useState(null);
-  const [borrarDia,setBorrarDia] = useState(null); // {iso, legible}
-  const [borrarPass,setBorrarPass] = useState('');
-  const [borrarError,setBorrarError] = useState('');
-  const [refresco,setRefresco] = useState(0);
 
   const iso = hoyISO();
 
@@ -190,8 +172,8 @@ function App(){
 
   const login = e=>{
     e.preventDefault();
-    if(pass===OBRAS_CONFIG.aurelia.password){setObra('aurelia');setPage('capataz');setPass('');setPassError('');}
-    else if(pass===ADMIN_PASS){setPage('admin');setPass('');setPassError('');}
+    const key = Object.keys(OBRAS_CONFIG).find(k=>OBRAS_CONFIG[k].password===pass.trim());
+    if(key){setObra(key);setPage('capataz');setPass('');setPassError('');}
     else {setPassError('Contraseña incorrecta');setPass('');}
   };
 
@@ -200,18 +182,16 @@ function App(){
   const tieneEntrada = emp=>!!reg(emp,'entrada');
   const tieneSalida  = emp=>!!reg(emp,'salida');
   const tieneAusencia= emp=>!!reg(emp,'ausencia');
-  const tieneART     = emp=>!!reg(emp,'art');
-  const tieneAlgo    = emp=>tieneEntrada(emp)||tieneSalida(emp)||tieneAusencia(emp)||tieneART(emp);
+  const tieneAlgo    = emp=>tieneEntrada(emp)||tieneSalida(emp)||tieneAusencia(emp);
 
   const resumen = ()=>{
     const r={};
-    cfg.empleados.forEach(e=>r[e]={entrada:null,salida:null,ausencia:false,art:false,corregido:false});
+    cfg.empleados.forEach(e=>r[e]={entrada:null,salida:null,ausencia:false,corregido:false});
     registros.forEach(x=>{
       if(!r[x.empleado]) return;
       if(x.tipo==='entrada') r[x.empleado].entrada=x.hora;
       if(x.tipo==='salida')  r[x.empleado].salida=x.hora;
       if(x.tipo==='ausencia')r[x.empleado].ausencia=true;
-      if(x.tipo==='art')     r[x.empleado].art=true;
       if(x.corregido) r[x.empleado].corregido=true;
     });
     correcciones.forEach(c=>{if(r[c.empleado]) r[c.empleado].corregido=true;});
@@ -222,7 +202,7 @@ function App(){
     const res = resumen();
     return cfg.empleados.filter(e=>{
       const x=res[e];
-      if(x.ausencia || x.art) return false;
+      if(x.ausencia) return false;
       return !x.entrada || !x.salida;
     });
   };
@@ -236,7 +216,6 @@ function App(){
   const registrarEntrada = ()=>{
     if(!sel) return;
     if(tieneAusencia(sel)){alert('Este empleado está marcado como ausencia. Eliminá la ausencia desde la lista de registros si vino a trabajar.');return;}
-    if(tieneART(sel)){alert('Este empleado está marcado con ART. Eliminá el ART desde la lista de registros si vino a trabajar.');return;}
     if(tieneEntrada(sel)){alert('Este empleado ya tiene entrada registrada.');return;}
     agregar(sel,'entrada',horaAhora(),'auto');
     setSel('');setBusqueda('');
@@ -244,7 +223,6 @@ function App(){
   const registrarSalida = ()=>{
     if(!sel) return;
     if(tieneAusencia(sel)){alert('Este empleado está marcado como ausencia.');return;}
-    if(tieneART(sel)){alert('Este empleado está marcado con ART.');return;}
     if(!tieneEntrada(sel)){alert('No se puede cargar la salida: este empleado no tiene entrada registrada.');return;}
     if(tieneSalida(sel)){alert('Este empleado ya tiene salida registrada.');return;}
     agregar(sel,'salida',horaAhora(),'auto');
@@ -256,12 +234,6 @@ function App(){
     agregar(sel,'ausencia',null,'auto');
     setSel('');setBusqueda('');
   };
-  const registrarART = ()=>{
-    if(!sel) return;
-    if(tieneAlgo(sel)){alert('Este empleado ya tiene registros del día. Eliminalos desde la lista de registros antes de marcar ART.');return;}
-    agregar(sel,'art',null,'auto');
-    setSel('');setBusqueda('');
-  };
 
   // carga manual desde la pestaña activa
   const abrirManual = ()=>{setMEmp('');setMHora('');setMMotivo('');setModal({tipo:'manual',campo:tab});};
@@ -269,7 +241,6 @@ function App(){
     if(!mEmp||!mHora){alert('Completá empleado y horario.');return;}
     const campo = modal.campo;
     if(tieneAusencia(mEmp)){alert('Ese empleado está marcado como ausencia.');return;}
-    if(tieneART(mEmp)){alert('Ese empleado está marcado con ART.');return;}
     if(campo==='entrada' && tieneEntrada(mEmp)){alert('Ese empleado ya tiene entrada.');return;}
     if(campo==='salida'){
       if(!tieneEntrada(mEmp)){alert('No se puede cargar la salida: falta la entrada de ese empleado.');return;}
@@ -282,13 +253,13 @@ function App(){
   // edición / eliminación con auditoría
   const abrirEditar = (emp,tipo)=>{
     const r = reg(emp,tipo);
-    const etiqueta = tipo==='ausencia'?'Ausente':(tipo==='art'?'ART':'');
+    const etiqueta = tipo==='ausencia'?'Ausente':'';
     setMEmp(emp);setMHora(r?r.hora||'':'');setMMotivo('');
     setModal({tipo:'editar',empleado:emp,campo:tipo,valorAnterior:r?(r.hora||etiqueta):''});
   };
   const guardarEdicion = ()=>{
     const {empleado,campo,valorAnterior} = modal;
-    const sinHora = campo==='ausencia' || campo==='art';
+    const sinHora = campo==='ausencia';
     if(!sinHora && !mHora){alert('Ingresá el horario.');return;}
     if(!sinHora && mHora===valorAnterior){setModal(null);return;}
     setRegistros(prev=>prev.map(r=>
@@ -327,7 +298,6 @@ function App(){
     cfg.empleados.forEach(e=>{
       const x=res[e];
       if(x.ausencia) msg += `${e}: AUSENTE\n`;
-      else if(x.art) msg += `${e}: ART\n`;
       else msg += `${e}: ${x.entrada} a ${x.salida}${x.corregido?' (corregido)':''}\n`;
     });
     if(correcciones.length) msg += `\nCorrecciones del día: ${correcciones.length}\n`;
@@ -344,7 +314,7 @@ function App(){
   if(page==='login'){
     return (
       <div className="container">
-        <h1>Asistencia de Obra</h1>
+        <h1>Asistencia</h1>
         <form onSubmit={login}>
           <div className="form-group">
             <label>Ingresá la contraseña</label>
@@ -353,243 +323,7 @@ function App(){
           </div>
           <button type="submit" className="btn-primary">Entrar</button>
         </form>
-      </div>
-    );
-  }
-
-  // ================= ADMIN =================
-  if(page==='admin'){
-    if(!adminObra){
-      return (
-        <div className="container">
-          <h1>Panel de administración</h1>
-          {Object.entries(OBRAS_CONFIG).map(([k,c])=>(
-            <div key={k} className="obra-card" onClick={()=>setAdminObra(k)}>
-              <h3 style={{marginBottom:2}}>{c.nombre}</h3>
-              <p className="info-text" style={{margin:0}}>{c.empleados.length} empleados · {c.capataz}</p>
-            </div>
-          ))}
-          <button className="btn-secondary" style={{marginTop:'1rem'}} onClick={()=>setPage('login')}>Salir</button>
-        </div>
-      );
-    }
-
-    const c = OBRAS_CONFIG[adminObra];
-
-    // armar lista de quincenas con datos (últimos 6 meses)
-    if(!adminQuincena){
-      const mapa = {};
-      const hoyD = new Date();
-      for(let i=0;i<190;i++){
-        const f = new Date(hoyD); f.setDate(f.getDate()-i);
-        const y=f.getFullYear(), m=f.getMonth(), d=f.getDate();
-        const isoF = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        if(localStorage.getItem(claveDia(adminObra,isoF))){
-          const q = d<=15?1:2;
-          const key = `${y}-${m}-${q}`;
-          if(!mapa[key]) mapa[key]={anio:y,mes:m,q,dias:0};
-          mapa[key].dias++;
-        }
-      }
-      const lista = Object.values(mapa).sort((a,b)=> b.anio-a.anio || b.mes-a.mes || b.q-a.q);
-      return (
-        <div className="container">
-          <h2 style={{marginBottom:'.25rem'}}>{c.nombre}</h2>
-          <p className="info-text">Seleccioná la quincena</p>
-          {lista.length===0 && <p className="info-text">Todavía no hay registros cargados.</p>}
-          {lista.map(q=>(
-            <div key={`${q.anio}-${q.mes}-${q.q}`} className="quincena-card" onClick={()=>setAdminQuincena(q)}>
-              <span>{q.q===1?'1 al 15':'16 al fin de mes'} de {MESES[q.mes]} {q.anio}</span>
-              <span className="correccion-meta">{q.dias} día{q.dias>1?'s':''}</span>
-            </div>
-          ))}
-          <button className="btn-secondary" style={{marginTop:'1rem'}} onClick={()=>setAdminObra(null)}>Volver</button>
-        </div>
-      );
-    }
-
-    // ---- tabla de quincena ----
-    const {anio,mes,q} = adminQuincena;
-    const ultimoDia = new Date(anio,mes+1,0).getDate();
-    const desde = q===1?1:16;
-    const hasta = q===1?15:ultimoDia;
-    const dias = [];
-    for(let d=desde; d<=hasta; d++){
-      const isoF = `${anio}-${String(mes+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      dias.push({d,iso:isoF,data:leerDia(adminObra,isoF)});
-    }
-    const diasConDatos = dias.filter(x=>x.data);
-    void refresco; // fuerza recálculo después de borrar un día
-
-    const celdaDe = (dia,emp)=>{
-      if(!dia.data) return {texto:'',clase:'celda-vacia'};
-      const rs = dia.data.registros.filter(r=>r.empleado===emp);
-      if(!rs.length) return {texto:'—',clase:'celda-vacia'};
-      if(rs.some(r=>r.tipo==='ausencia')) return {texto:'AUS',clase:'celda-ausencia'};
-      if(rs.some(r=>r.tipo==='art')) return {texto:'ART',clase:'celda-art'};
-      const e = rs.find(r=>r.tipo==='entrada');
-      const s = rs.find(r=>r.tipo==='salida');
-      const corregido = rs.some(r=>r.corregido) || dia.data.correcciones.some(x=>x.empleado===emp);
-      return {texto:`${e?e.hora:'—'}\n${s?s.hora:'—'}`,clase:corregido?'celda-corregida':''};
-    };
-
-    const todasCorrecciones = [];
-    diasConDatos.forEach(dia=>{
-      dia.data.correcciones.forEach(x=>todasCorrecciones.push({...x,fecha:isoALegible(dia.iso)}));
-    });
-
-    // respaldo de un día puntual, se descarga antes de borrar
-    const descargarRespaldoDia = (isoF)=>{
-      const d = leerDia(adminObra,isoF);
-      if(!d) return;
-      let csv = `RESPALDO ANTES DE BORRAR\nOBRA:,${c.nombre}\nFECHA:,${isoALegible(isoF)}\nDescargado el:,${selloAhora()}\n\n`;
-      csv += 'Empleado,Entrada,Salida,Estado\n';
-      c.empleados.forEach(emp=>{
-        const rs = d.registros.filter(r=>r.empleado===emp);
-        if(rs.some(r=>r.tipo==='ausencia')){csv += `"${emp}",-,-,AUSENTE\n`;return;}
-        const e=rs.find(r=>r.tipo==='entrada'), s=rs.find(r=>r.tipo==='salida');
-        const corr = rs.some(r=>r.corregido)||d.correcciones.some(x=>x.empleado===emp);
-        csv += `"${emp}",${e?e.hora:'-'},${s?s.hora:'-'},${corr?'CORREGIDO':''}\n`;
-      });
-      if(d.correcciones.length){
-        csv += `\nCORRECCIONES\nEmpleado,Campo,Acción,Anterior,Nuevo,Motivo,Registrado\n`;
-        d.correcciones.forEach(x=>{
-          csv += `"${x.empleado}",${x.campo},${x.accion},${x.anterior},${x.nuevo},"${x.motivo||''}",${x.sello}\n`;
-        });
-      }
-      const a=document.createElement('a');
-      a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);
-      a.download=`RESPALDO-${adminObra}-${isoF}.csv`;
-      document.body.appendChild(a);a.click();document.body.removeChild(a);
-    };
-
-    const confirmarBorrado = ()=>{
-      if(borrarPass!==ADMIN_PASS){setBorrarError('Contraseña incorrecta');setBorrarPass('');return;}
-      descargarRespaldoDia(borrarDia.iso);
-      localStorage.removeItem(claveDia(adminObra,borrarDia.iso));
-      setBorrarDia(null);setBorrarPass('');setBorrarError('');
-      setRefresco(n=>n+1);
-    };
-
-    const descargarCSV = ()=>{
-      let csv = `OBRA:,${c.nombre}\nQUINCENA:,${q===1?'1 al 15':'16 al '+ultimoDia} de ${MESES[mes]} ${anio}\n\n`;
-      csv += 'Empleado,' + diasConDatos.map(x=>`${x.d}/${mes+1} entrada,${x.d}/${mes+1} salida`).join(',') + '\n';
-      c.empleados.forEach(emp=>{
-        const fila = diasConDatos.map(dia=>{
-          const rs = dia.data.registros.filter(r=>r.empleado===emp);
-          if(rs.some(r=>r.tipo==='ausencia')) return 'AUSENTE,AUSENTE';
-          if(rs.some(r=>r.tipo==='art')) return 'ART,ART';
-          const e=rs.find(r=>r.tipo==='entrada'), s=rs.find(r=>r.tipo==='salida');
-          return `${e?e.hora:'-'},${s?s.hora:'-'}`;
-        });
-        csv += `"${emp}",${fila.join(',')}\n`;
-      });
-      if(todasCorrecciones.length){
-        csv += `\nCORRECCIONES\nFecha,Empleado,Campo,Acción,Anterior,Nuevo,Motivo,Registrado\n`;
-        todasCorrecciones.forEach(x=>{
-          csv += `${x.fecha},"${x.empleado}",${x.campo},${x.accion},${x.anterior},${x.nuevo},"${x.motivo||''}",${x.sello}\n`;
-        });
-      }
-      const a=document.createElement('a');
-      a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);
-      a.download=`asistencia-${adminObra}-${MESES[mes]}${anio}-q${q}.csv`;
-      document.body.appendChild(a);a.click();document.body.removeChild(a);
-    };
-
-    return (
-      <div className="container-wide">
-        <h2 style={{marginBottom:'.25rem'}}>{c.nombre}</h2>
-        <p className="info-text">Quincena {q===1?'1 al 15':`16 al ${ultimoDia}`} de {MESES[mes]} {anio}</p>
-
-        <div className="leyenda">
-          <span><i className="cuadrito" style={{background:'var(--amarillo)',borderColor:'var(--amarillo-borde)'}}></i> Corregido por el capataz</span>
-          <span><i className="cuadrito" style={{background:'#f7e9e6'}}></i> Ausente</span>
-          <span><i className="cuadrito" style={{background:'#efe4e3'}}></i> ART</span>
-          <span><i className="cuadrito" style={{background:'#fff'}}></i> Fila superior: entrada · inferior: salida</span>
-        </div>
-
-        {diasConDatos.length===0 ? (
-          <p className="info-text">No hay días cargados en esta quincena.</p>
-        ) : (
-          <div className="tabla-wrap">
-            <table className="tabla-quincena">
-              <thead>
-                <tr>
-                  <th className="nombre">Empleado</th>
-                  {dias.map(x=><th key={x.d}>{x.d}</th>)}
-                </tr>
-              </thead>
-              <tbody>
-                {c.empleados.map(emp=>(
-                  <tr key={emp}>
-                    <td className="nombre">{emp}</td>
-                    {dias.map(dia=>{
-                      const cel = celdaDe(dia,emp);
-                      return <td key={dia.d} className={cel.clase} style={{whiteSpace:'pre-line',lineHeight:1.35}}>{cel.texto}</td>;
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        <div className="card">
-          <h3>Correcciones de la quincena ({todasCorrecciones.length})</h3>
-          {todasCorrecciones.length===0 ? (
-            <p className="info-text" style={{margin:0}}>No se registraron correcciones.</p>
-          ) : todasCorrecciones.map((x,i)=>(
-            <div key={i} className="correccion-item">
-              <div><strong>{x.fecha}</strong> — {x.empleado}: se {x.accion} la {x.campo} ({x.anterior} → {x.nuevo})</div>
-              {x.motivo && <div className="correccion-meta">Motivo: {x.motivo}</div>}
-              <div className="correccion-meta">Registrado el {x.sello}</div>
-            </div>
-          ))}
-        </div>
-
-        {diasConDatos.length>0 && (
-          <div className="card">
-            <h3>Borrar un día</h3>
-            <p className="info-text">
-              Al borrar se descarga primero un respaldo en CSV. La información se elimina de la app y no se puede recuperar desde acá.
-            </p>
-            <div className="dias-borrar">
-              {diasConDatos.map(dia=>(
-                <button key={dia.iso} className="btn-cancel btn-small"
-                  onClick={()=>{setBorrarDia({iso:dia.iso,legible:isoALegible(dia.iso)});setBorrarPass('');setBorrarError('');}}>
-                  {dia.d}/{mes+1}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <button className="btn-primary" onClick={descargarCSV}>Descargar CSV de la quincena</button>
-        <button className="btn-secondary" style={{marginTop:8}} onClick={()=>setAdminQuincena(null)}>Volver</button>
-
-        {borrarDia && (
-          <div className="modal-overlay" onClick={()=>{setBorrarDia(null);setBorrarPass('');setBorrarError('');}}>
-            <div className="modal" onClick={e=>e.stopPropagation()}>
-              <h2>Borrar el día {borrarDia.legible}</h2>
-              <p className="info-text">
-                Se va a eliminar toda la asistencia de ese día en {c.nombre}, incluidas las correcciones.
-                Antes de borrar se descarga un respaldo en CSV.
-              </p>
-              <p className="error" style={{marginBottom:12}}>Esta acción no se puede deshacer.</p>
-              <div className="form-group">
-                <label>Ingresá la clave de administrador</label>
-                <input type="password" value={borrarPass}
-                  onChange={e=>{setBorrarPass(e.target.value);setBorrarError('');}}
-                  placeholder="Clave"/>
-                {borrarError && <div className="error">{borrarError}</div>}
-              </div>
-              <div className="modal-buttons">
-                <button className="btn-cancel" onClick={()=>{setBorrarDia(null);setBorrarPass('');setBorrarError('');}}>Cancelar</button>
-                <button className="btn-ausencia" disabled={!borrarPass} onClick={confirmarBorrado}>Descargar y borrar</button>
-              </div>
-            </div>
-          </div>
-        )}
+        <div className="pie-version">{VERSION}</div>
       </div>
     );
   }
@@ -601,7 +335,6 @@ function App(){
 
   const estadoEnLista = emp=>{
     if(tieneAusencia(emp)) return {txt:'Ausente',dis:true};
-    if(tieneART(emp)) return {txt:'ART',dis:true};
     if(tab==='entrada') return tieneEntrada(emp)?{txt:`Entrada ${reg(emp,'entrada').hora}`,dis:true}:{txt:'',dis:false};
     if(!tieneEntrada(emp)) return {txt:'Sin entrada',dis:true};
     if(tieneSalida(emp)) return {txt:`Salida ${reg(emp,'salida').hora}`,dis:true};
@@ -619,7 +352,7 @@ function App(){
           <button className="profile-button" onClick={()=>setPerfil(!perfil)}>👤</button>
           {perfil && (
             <div className="profile-popup">
-              <p className="profile-name">{cfg.capataz}</p>
+              <p className="profile-name">{cfg.capataz || cfg.nombre}</p>
               <button className="btn-secondary btn-small" onClick={cerrarSesion}>Cerrar sesión</button>
             </div>
           )}
@@ -766,6 +499,8 @@ function App(){
           {!puedeCerrar() && <p className="error" style={{textAlign:'center'}}>Completá todos los registros para poder cerrar.</p>}
         </>
       )}
+
+        <div className="pie-version">{VERSION}</div>
 
       {/* MODAL CARGA MANUAL */}
       {modal && modal.tipo==='manual' && (
