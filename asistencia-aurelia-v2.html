@@ -302,7 +302,7 @@ function App(){
     });
     if(correcciones.length) msg += `\nCorrecciones del día: ${correcciones.length}\n`;
     setCerrado(true);
-    window.open(`https://wa.me/${cfg.wsp}?text=${encodeURIComponent(msg)}`,'_blank');
+    window.location.href = `https://wa.me/${cfg.wsp}?text=${encodeURIComponent(msg)}`;
   };
 
   const cerrarSesion = ()=>{
@@ -346,7 +346,7 @@ function App(){
       <div className="header-top">
         <div>
           <h2>{cfg.nombre}{cerrado && <span className="badge-cerrado">Día cerrado</span>}</h2>
-          <p className="fecha-info">{new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'})}</p>
+          <p className="fecha-info">{(() => {const f = new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'}); return f.replace(/De /, 'de ');})()}</p>
         </div>
         <div style={{position:'relative'}}>
           <button className="profile-button" onClick={()=>setPerfil(!perfil)}>👤</button>
