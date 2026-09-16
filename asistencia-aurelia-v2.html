@@ -22,13 +22,13 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--beige);color:#2C3639;line-height:1.5;}
 .container{max-width:600px;margin:0 auto;padding:1rem;min-height:100vh;}
 .container-wide{max-width:1100px;margin:0 auto;padding:1rem;min-height:100vh;}
-h1{font-size:22px;font-weight:600;margin-bottom:1.5rem;text-align:center;}
-h2{font-size:19px;font-weight:600;}
-h3{font-size:15px;font-weight:600;margin-bottom:10px;}
-label{font-size:13px;display:block;margin-bottom:5px;font-weight:600;}
+h1{font-size:25px;font-weight:600;margin-bottom:1.5rem;text-align:center;}
+h2{font-size:21px;font-weight:600;}
+h3{font-size:17px;font-weight:600;margin-bottom:10px;}
+label{font-size:14px;display:block;margin-bottom:5px;font-weight:600;}
 input,select{width:100%;padding:10px 12px;font-size:16px;border:1px solid #d5d2c8;border-radius:8px;margin-bottom:8px;background:#fff;font-family:inherit;}
 input:focus,select:focus{outline:none;border-color:var(--oscuro);}
-button{padding:12px;font-size:15px;font-weight:600;border:none;border-radius:8px;cursor:pointer;font-family:inherit;}
+button{padding:13px;font-size:16px;font-weight:600;border:none;border-radius:8px;cursor:pointer;font-family:inherit;}
 button:active{transform:scale(.98);}
 button:disabled{opacity:.45;cursor:not-allowed;}
 .btn-primary{background:var(--oscuro);color:#fff;width:100%;}
@@ -38,52 +38,56 @@ button:disabled{opacity:.45;cursor:not-allowed;}
 .btn-borrar{background:#8a1d15;color:#fff;width:100%;}
 .btn-secondary{background:var(--secundario);color:#fff;width:100%;}
 .btn-cancel{background:#c9c5ba;color:#2C3639;}
-.btn-small{padding:9px 12px;font-size:13px;}
+.btn-small{padding:10px 13px;font-size:14px;}
 .form-group{margin-bottom:1rem;}
 .header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;gap:10px;}
 .profile-button{background:var(--secundario);color:#fff;border-radius:50%;width:42px;height:42px;font-size:18px;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;}
 .profile-popup{position:absolute;top:50px;right:0;background:#fff;border:1px solid #d5d2c8;border-radius:10px;padding:14px;box-shadow:0 4px 14px rgba(0,0,0,.12);z-index:999;min-width:210px;}
-.profile-name{font-size:14px;font-weight:600;margin-bottom:10px;}
-.fecha-info{font-size:13px;color:#6b6b6b;text-transform:capitalize;}
+.profile-name{font-size:15px;font-weight:600;margin-bottom:10px;}
+.fecha-info{font-size:14px;color:#6b6b6b;}
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;}
-.tab-button{background:#e3e0d7;border:1px solid #d5d2c8;color:#6b6b6b;padding:11px;font-size:14px;}
+.tab-button{background:#e3e0d7;border:1px solid #d5d2c8;color:#6b6b6b;padding:12px;font-size:15px;}
 .tab-button.active{background:var(--oscuro);color:#fff;border-color:var(--oscuro);}
 .employee-list{max-height:230px;overflow-y:auto;border:1px solid #d5d2c8;border-radius:8px;background:#fff;}
-.employee-item{width:100%;padding:11px 12px;border:none;border-bottom:1px solid #eeebe3;text-align:left;background:#fff;font-size:14px;font-weight:500;border-radius:0;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.employee-item{width:100%;padding:12px;border:none;border-bottom:1px solid #eeebe3;text-align:left;background:#fff;font-size:16px;font-weight:500;transition:font-size .1s;border-radius:0;display:flex;justify-content:space-between;align-items:center;gap:8px;}
 .employee-item:last-child{border-bottom:none;}
-.employee-item.selected{background:#e4ecf5;border-left:3px solid var(--oscuro);}
-.employee-item .marca{font-size:12px;font-weight:600;color:#8a8a8a;white-space:nowrap;}
+.employee-item.selected{background:#e4ecf5;border-left:3px solid var(--oscuro);font-size:18px;font-weight:700;}
+.employee-list.hay-seleccion .employee-item:not(.selected){color:#adaaa1;}
+.employee-item .marca{font-size:13px;font-weight:600;color:#8a8a8a;white-space:nowrap;}
+.registros-scroll{max-height:230px;overflow-y:auto;}
 .card{background:#fff;border:1px solid #d5d2c8;border-radius:10px;padding:14px;margin-bottom:1rem;}
-.registro-item{padding:9px 0;border-bottom:1px solid #eeebe3;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;}
+.registro-item{padding:11px 0;border-bottom:1px solid #eeebe3;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:15px;}
 .registro-item:last-child{border-bottom:none;}
 .registro-nombre{font-weight:500;}
 .registro-derecha{display:flex;align-items:center;gap:10px;white-space:nowrap;}
 .entrada-badge{color:var(--verde);font-weight:600;}
 .salida-badge{color:var(--rojo);font-weight:600;}
 .ausencia-badge{color:var(--ausencia);font-weight:600;}
-.link-editar{background:none;border:none;color:var(--secundario);font-size:12px;text-decoration:underline;padding:2px 4px;font-weight:600;}
-.tabla{width:100%;font-size:13px;border-collapse:collapse;}
-.tabla td{padding:8px 4px;border-bottom:1px solid #eeebe3;}
+.badge-editable{background:none;border:none;padding:3px 5px;font-size:15px;font-weight:600;border-bottom:1px dotted currentColor;border-radius:0;}
+.badge-editable.corr{background:var(--amarillo);border-radius:4px;border-bottom:1px dotted #6b5800;}
+.tabla{width:100%;font-size:15px;border-collapse:collapse;}
+.tabla td{padding:10px 4px;border-bottom:1px solid #eeebe3;}
 .tabla td:nth-child(2),.tabla td:nth-child(3){text-align:center;color:#555;}
-.fila-incompleta{background:#fdf1e3;}
 .fila-ausencia{background:#f7e9e6;}
 .fila-corregida{background:var(--amarillo);}
 .aviso{background:#fce9ee;border:1px solid #f0b6c5;border-radius:8px;padding:12px;margin-bottom:1rem;}
-.aviso-titulo{font-size:13px;font-weight:600;color:#a01840;margin-bottom:6px;}
-.aviso-item{font-size:13px;color:#a01840;}
-.aviso-ok{background:#e6f3ef;border:1px solid #9ccfbe;border-radius:8px;padding:12px;margin-bottom:1rem;font-size:13px;color:#0F6E56;font-weight:600;}
-.error{color:#c1272d;font-size:13px;margin-top:6px;}
-.info-text{font-size:13px;color:#6b6b6b;margin-bottom:8px;}
+.aviso-titulo{font-size:15px;font-weight:600;color:#a01840;margin-bottom:6px;}
+.aviso-item{font-size:14px;color:#a01840;}
+.aviso-ok{background:#e6f3ef;border:1px solid #9ccfbe;border-radius:8px;padding:12px;margin-bottom:1rem;font-size:14px;color:#0F6E56;font-weight:600;}
+.error{color:#c1272d;font-size:14px;margin-top:6px;}
+.info-text{font-size:14px;color:#6b6b6b;margin-bottom:8px;}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem;}
 .modal{background:#fff;border-radius:12px;padding:1.5rem;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;}
-.modal h2{margin-bottom:1rem;font-size:17px;}
+.modal h2{margin-bottom:1rem;font-size:19px;}
 .modal-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1.25rem;}
 .btn-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1rem;}
 .stack{display:flex;flex-direction:column;gap:8px;margin-top:1rem;}
-.correccion-item{font-size:13px;padding:9px 0;border-bottom:1px solid #eeebe3;}
+.correccion-item{font-size:14px;padding:9px 0;border-bottom:1px solid #eeebe3;}
 .correccion-item:last-child{border-bottom:none;}
-.correccion-meta{color:#6b6b6b;font-size:12px;}
-.badge-cerrado{display:inline-block;background:var(--verde);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;margin-left:8px;vertical-align:middle;}
+.correccion-meta{color:#6b6b6b;font-size:13px;}
+.badge-cerrado{display:inline-block;background:var(--verde);color:#fff;font-size:12px;font-weight:600;padding:3px 9px;border-radius:20px;margin-left:8px;vertical-align:middle;}
+.fila-reabrir{display:flex;justify-content:flex-end;margin-top:1rem;}
+.btn-reabrir{background:var(--amarillo);color:#6b5800;border:1px solid var(--amarillo-borde);font-size:14px;padding:10px 14px;width:auto;}
 .pie-version{text-align:center;font-size:10px;color:#bdb9ae;margin-top:2rem;padding-bottom:1rem;letter-spacing:.5px;}
 </style>
 </head>
@@ -97,29 +101,25 @@ const OBRAS_CONFIG = {
     nombre:'Edificio Aurelia',
     password:'aurelia634',
     capataz:'Capataz Ramon Ivo',
+    direccion:'Peron Oeste N° 634',
     wsp:'543584173969',
     empleados:[
       'CORIA JOSÉ ENRIQUE','IVO FRANCISCO','IVO FRANCO','IVO NICOLAS AGUSTIN',
       'IVO RAMON','OLGUIN GIULIANO','PEREYRA GALLARDO','RODRIGUEZ SANTIAGO','VILLARREAL MARCOS'
     ].sort((a,b)=>a.localeCompare(b,'es'))
-  },
-  oficina:{
-    nombre:'Oficina',
-    password:'ofi1143',
-    capataz:'',
-    wsp:'543584173969',
-    empleados:[
-      'ALDANA QUIÑONEZ','ANABELLA ORTIZ','ANTONELLA PRIOU','LUCIANO VILLARREAL','MONICA PEREZ'
-    ].sort((a,b)=>a.localeCompare(b,'es'))
   }
 };
-const VERSION = 'beta';
+const VERSION = 'Beta v01.05';
 
 // ---------- helpers de fecha / storage ----------
 const claveDia = (obraKey,d)=>`asist_${obraKey}_${d}`;           // d = 'YYYY-MM-DD'
 const hoyISO = ()=>{const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;};
 const isoALegible = iso=>{const [y,m,d]=iso.split('-');return `${d}/${m}/${y}`;};
 const horaAhora = ()=>{const n=new Date();return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;};
+const fechaLegible = ()=>{
+  const f = new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
+  return f.charAt(0).toUpperCase() + f.slice(1);
+};
 const selloAhora = ()=>{const n=new Date();return `${isoALegible(hoyISO())} ${horaAhora()}`;};
 
 function leerDia(obraKey,iso){
@@ -150,7 +150,6 @@ function App(){
   const [modal,setModal] = useState(null); // {tipo:'manual'|'editar', ...}
   const [mEmp,setMEmp] = useState('');
   const [mHora,setMHora] = useState('');
-  const [mMotivo,setMMotivo] = useState('');
 
   const iso = hoyISO();
 
@@ -172,7 +171,8 @@ function App(){
 
   const login = e=>{
     e.preventDefault();
-    const key = Object.keys(OBRAS_CONFIG).find(k=>OBRAS_CONFIG[k].password===pass.trim());
+    const ingresada = pass.trim().toLowerCase();
+    const key = Object.keys(OBRAS_CONFIG).find(k=>OBRAS_CONFIG[k].password.toLowerCase()===ingresada);
     if(key){setObra(key);setPage('capataz');setPass('');setPassError('');}
     else {setPassError('Contraseña incorrecta');setPass('');}
   };
@@ -225,6 +225,8 @@ function App(){
     if(tieneAusencia(sel)){alert('Este empleado está marcado como ausencia.');return;}
     if(!tieneEntrada(sel)){alert('No se puede cargar la salida: este empleado no tiene entrada registrada.');return;}
     if(tieneSalida(sel)){alert('Este empleado ya tiene salida registrada.');return;}
+    const hE = reg(sel,'entrada').hora;
+    if(horaAhora() < hE){alert(`La salida no puede ser anterior a la entrada (${hE}).`);return;}
     agregar(sel,'salida',horaAhora(),'auto');
     setSel('');setBusqueda('');
   };
@@ -236,7 +238,7 @@ function App(){
   };
 
   // carga manual desde la pestaña activa
-  const abrirManual = ()=>{setMEmp('');setMHora('');setMMotivo('');setModal({tipo:'manual',campo:tab});};
+  const abrirManual = ()=>{setMEmp(sel||'');setMHora('');setModal({tipo:'manual',campo:tab});};
   const guardarManual = ()=>{
     if(!mEmp||!mHora){alert('Completá empleado y horario.');return;}
     const campo = modal.campo;
@@ -245,6 +247,12 @@ function App(){
     if(campo==='salida'){
       if(!tieneEntrada(mEmp)){alert('No se puede cargar la salida: falta la entrada de ese empleado.');return;}
       if(tieneSalida(mEmp)){alert('Ese empleado ya tiene salida.');return;}
+      const hE = reg(mEmp,'entrada').hora;
+      if(mHora < hE){alert(`La salida no puede ser anterior a la entrada (${hE}).`);return;}
+    }
+    if(campo==='entrada' && tieneSalida(mEmp)){
+      const hS = reg(mEmp,'salida').hora;
+      if(mHora > hS){alert(`La entrada no puede ser posterior a la salida (${hS}).`);return;}
     }
     agregar(mEmp,campo,mHora,'manual');
     setModal(null);setMEmp('');setMHora('');
@@ -254,7 +262,7 @@ function App(){
   const abrirEditar = (emp,tipo)=>{
     const r = reg(emp,tipo);
     const etiqueta = tipo==='ausencia'?'Ausente':'';
-    setMEmp(emp);setMHora(r?r.hora||'':'');setMMotivo('');
+    setMEmp(emp);setMHora(r?r.hora||'':'');
     setModal({tipo:'editar',empleado:emp,campo:tipo,valorAnterior:r?(r.hora||etiqueta):''});
   };
   const guardarEdicion = ()=>{
@@ -262,14 +270,22 @@ function App(){
     const sinHora = campo==='ausencia';
     if(!sinHora && !mHora){alert('Ingresá el horario.');return;}
     if(!sinHora && mHora===valorAnterior){setModal(null);return;}
+    if(campo==='salida' && tieneEntrada(empleado)){
+      const hE = reg(empleado,'entrada').hora;
+      if(mHora < hE){alert(`La salida no puede ser anterior a la entrada (${hE}).`);return;}
+    }
+    if(campo==='entrada' && tieneSalida(empleado)){
+      const hS = reg(empleado,'salida').hora;
+      if(mHora > hS){alert(`La entrada no puede ser posterior a la salida (${hS}).`);return;}
+    }
     setRegistros(prev=>prev.map(r=>
       (r.empleado===empleado && r.tipo===campo) ? {...r,hora:mHora,origen:'corregido',corregido:true,sello:selloAhora()} : r
     ));
     setCorrecciones(prev=>[...prev,{
       empleado,campo,accion:'modificó',anterior:valorAnterior,nuevo:mHora,
-      motivo:mMotivo.trim(),sello:selloAhora()
+      motivo:'',sello:selloAhora()
     }]);
-    setModal(null);setMHora('');setMMotivo('');
+    setModal(null);setMHora('');
   };
   const eliminarRegistro = ()=>{
     const {empleado,campo,valorAnterior} = modal;
@@ -281,13 +297,13 @@ function App(){
       if(borrarTambienSalida && r.tipo==='salida') return false;
       return true;
     }));
-    const nuevas=[{empleado,campo,accion:'eliminó',anterior:valorAnterior,nuevo:'—',motivo:mMotivo.trim(),sello:selloAhora()}];
+    const nuevas=[{empleado,campo,accion:'eliminó',anterior:valorAnterior,nuevo:'—',motivo:'',sello:selloAhora()}];
     if(borrarTambienSalida){
       const s=reg(empleado,'salida');
       nuevas.push({empleado,campo:'salida',accion:'eliminó',anterior:s?s.hora:'—',nuevo:'—',motivo:'Se eliminó junto con la entrada',sello:selloAhora()});
     }
     setCorrecciones(prev=>[...prev,...nuevas]);
-    setModal(null);setMHora('');setMMotivo('');
+    setModal(null);setMHora('');
   };
 
   const cerrarDia = ()=>{
@@ -303,6 +319,16 @@ function App(){
     if(correcciones.length) msg += `\nCorrecciones del día: ${correcciones.length}\n`;
     setCerrado(true);
     window.location.href = `https://wa.me/${cfg.wsp}?text=${encodeURIComponent(msg)}`;
+  };
+
+  const reabrirDia = ()=>{
+    if(!window.confirm('Se va a reabrir la asistencia del día para poder corregirla. Al terminar vas a tener que cerrarla y enviarla de nuevo. ¿Confirmás?')) return;
+    setCorrecciones(prev=>[...prev,{
+      empleado:'—',campo:'día',accion:'reabrió',anterior:'cerrado',nuevo:'abierto',
+      motivo:'El capataz reabrió el día para corregir la asistencia',sello:selloAhora()
+    }]);
+    setCerrado(false);
+    setVista('carga');
   };
 
   const cerrarSesion = ()=>{
@@ -332,6 +358,7 @@ function App(){
   const res = resumen();
   const falt = faltantes();
   const listaFiltrada = cfg.empleados.filter(e=>e.toLowerCase().includes(busqueda.toLowerCase()));
+  const conRegistro = cfg.empleados.filter(e=>tieneEntrada(e)||tieneSalida(e)||tieneAusencia(e));
 
   const estadoEnLista = emp=>{
     if(tieneAusencia(emp)) return {txt:'Ausente',dis:true};
@@ -342,11 +369,12 @@ function App(){
   };
 
   return (
-    <div className="container">
+    <div className="container" onClick={()=>{if(sel) setSel('');}}>
       <div className="header-top">
         <div>
           <h2>{cfg.nombre}{cerrado && <span className="badge-cerrado">Día cerrado</span>}</h2>
-          <p className="fecha-info">{(() => {const f = new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'}); return f.replace(/De /, 'de ');})()}</p>
+          <p className="fecha-info">{cfg.direccion}</p>
+          <p className="fecha-info">{fechaLegible()}</p>
         </div>
         <div style={{position:'relative'}}>
           <button className="profile-button" onClick={()=>setPerfil(!perfil)}>👤</button>
@@ -389,6 +417,9 @@ function App(){
               ))}
             </div>
           )}
+          <div className="fila-reabrir">
+            <button className="btn-reabrir" onClick={reabrirDia}>Realizar cambios en la asistencia</button>
+          </div>
         </>
       ) : vista==='carga' ? (
         <>
@@ -397,10 +428,10 @@ function App(){
             <button className={`tab-button ${tab==='salida'?'active':''}`} onClick={()=>{setTab('salida');setSel('');}}>Salida</button>
           </div>
 
-          <div className="form-group">
+          <div className="form-group" onClick={e=>e.stopPropagation()}>
             <label>Buscá el empleado</label>
             <input type="text" value={busqueda} onChange={e=>setBusqueda(e.target.value)} placeholder="Escribí un nombre"/>
-            <div className="employee-list">
+            <div className={`employee-list ${sel?'hay-seleccion':''}`}>
               {listaFiltrada.map(emp=>{
                 const st = estadoEnLista(emp);
                 return (
@@ -417,39 +448,51 @@ function App(){
             </div>
           </div>
 
-          {sel && tab==='entrada' && (
-            <div className="btn-grid2">
-              <button className="btn-entrada" onClick={registrarEntrada}>Registrar Entrada</button>
-              <button className="btn-ausencia" onClick={registrarAusencia}>Ausencia</button>
+          {sel && (
+            <div onClick={e=>e.stopPropagation()}>
+              {tab==='entrada' && (
+                <div className="btn-grid2">
+                  <button className="btn-entrada" onClick={registrarEntrada}>Registrar Entrada</button>
+                  <button className="btn-ausencia" onClick={registrarAusencia}>Ausencia</button>
+                </div>
+              )}
+              {tab==='salida' && (
+                <button className="btn-salida" style={{width:'100%',marginTop:'1rem'}} onClick={registrarSalida}>Registrar Salida</button>
+              )}
+              <button className="btn-secondary btn-small" style={{marginTop:'.5rem'}} onClick={abrirManual}>
+                Cargar {tab} manualmente
+              </button>
             </div>
           )}
-          {sel && tab==='salida' && (
-            <button className="btn-salida" style={{width:'100%',marginTop:'1rem'}} onClick={registrarSalida}>Registrar Salida</button>
-          )}
-
-          <button className="btn-secondary btn-small" style={{marginTop:'1rem'}} onClick={abrirManual}>
-            Cargar {tab} manualmente
-          </button>
 
           {registros.length>0 && (
             <div className="card" style={{marginTop:'1rem'}}>
-              <h3>Registros del día ({registros.length})</h3>
-              {registros.map((r,i)=>(
-                <div key={i} className="registro-item">
-                  <span className="registro-nombre">{r.empleado}</span>
-                  <span className="registro-derecha">
-                    {r.tipo==='entrada' && <span className="entrada-badge">Entrada {r.hora}</span>}
-                    {r.tipo==='salida' && <span className="salida-badge">Salida {r.hora}</span>}
-                    {r.tipo==='ausencia' && <span className="ausencia-badge">Ausente</span>}
-                    {r.corregido && <span className="marca">corregido</span>}
-                    <button className="link-editar" onClick={()=>abrirEditar(r.empleado,r.tipo)}>Modificar</button>
-                  </span>
-                </div>
-              ))}
+              <h3>Registros del día ({conRegistro.length})</h3>
+              <p className="info-text" style={{marginBottom:10}}>Tocá un horario para modificarlo o eliminarlo.</p>
+              <div className="registros-scroll">
+              {conRegistro.map(emp=>{
+                const e = reg(emp,'entrada'), sa = reg(emp,'salida'), au = reg(emp,'ausencia');
+                return (
+                  <div key={emp} className="registro-item">
+                    <span className="registro-nombre">{emp}</span>
+                    <span className="registro-derecha">
+                      {au ? (
+                        <button className="badge-editable ausencia-badge" onClick={()=>abrirEditar(emp,'ausencia')}>Ausente</button>
+                      ) : (
+                        <>
+                          {e && <button className={`badge-editable entrada-badge ${e.corregido?'corr':''}`} onClick={()=>abrirEditar(emp,'entrada')}>E {e.hora}</button>}
+                          {sa && <button className={`badge-editable salida-badge ${sa.corregido?'corr':''}`} onClick={()=>abrirEditar(emp,'salida')}>S {sa.hora}</button>}
+                        </>
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
+              </div>
             </div>
           )}
 
-          <button className="btn-primary" style={{marginTop:'.5rem'}} onClick={()=>setVista('resumen')}>Ver resumen</button>
+          <button className="btn-primary" style={{marginTop:'2.5rem'}} onClick={()=>setVista('resumen')}>Ver resumen</button>
         </>
       ) : (
         <>
@@ -458,40 +501,29 @@ function App(){
           <div className="card">
             <h3>Resumen del día</h3>
             {falt.length>0 ? (
-              <div className="aviso">
+              <div className="aviso" style={{marginBottom:0}}>
                 <div className="aviso-titulo">Falta completar ({falt.length})</div>
                 {falt.map(e=><div key={e} className="aviso-item">• {e}</div>)}
               </div>
             ) : (
-              <div className="aviso-ok">Todos los empleados tienen entrada y salida o ausencia.</div>
+              <>
+                <div className="aviso-ok">Todos los empleados tienen entrada y salida o ausencia.</div>
+                <table className="tabla"><tbody>
+                  {cfg.empleados.map(e=>{
+                    const x=res[e];
+                    const clase = x.ausencia?'fila-ausencia':'';
+                    return (
+                      <tr key={e} className={clase}>
+                        <td>{e}</td>
+                        <td>{x.ausencia?'Ausente':x.entrada}</td>
+                        <td>{x.ausencia?'—':x.salida}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody></table>
+              </>
             )}
-            <table className="tabla"><tbody>
-              {cfg.empleados.map(e=>{
-                const x=res[e];
-                const clase = x.ausencia?'fila-ausencia':(x.corregido?'fila-corregida':((!x.entrada||!x.salida)?'fila-incompleta':''));
-                return (
-                  <tr key={e} className={clase}>
-                    <td>{e}</td>
-                    <td>{x.ausencia?'Ausente':(x.entrada||'—')}</td>
-                    <td>{x.ausencia?'—':(x.salida||'—')}</td>
-                  </tr>
-                );
-              })}
-            </tbody></table>
           </div>
-
-          {correcciones.length>0 && (
-            <div className="card">
-              <h3>Correcciones del día ({correcciones.length})</h3>
-              {correcciones.map((x,i)=>(
-                <div key={i} className="correccion-item">
-                  <div>{x.empleado}: se {x.accion} la {x.campo} ({x.anterior} → {x.nuevo})</div>
-                  {x.motivo && <div className="correccion-meta">Motivo: {x.motivo}</div>}
-                  <div className="correccion-meta">{x.sello}</div>
-                </div>
-              ))}
-            </div>
-          )}
 
           <button className="btn-primary" disabled={!puedeCerrar()} onClick={cerrarDia}>
             Cerrar día y enviar por WhatsApp
@@ -504,7 +536,7 @@ function App(){
 
       {/* MODAL CARGA MANUAL */}
       {modal && modal.tipo==='manual' && (
-        <div className="modal-overlay">
+        <div className="modal-overlay" onClick={e=>e.stopPropagation()}>
           <div className="modal">
             <h2>Cargar {modal.campo} manualmente</h2>
             <div className="form-group">
@@ -533,7 +565,7 @@ function App(){
 
       {/* MODAL EDITAR / ELIMINAR */}
       {modal && modal.tipo==='editar' && (
-        <div className="modal-overlay">
+        <div className="modal-overlay" onClick={e=>e.stopPropagation()}>
           <div className="modal">
             <h2>Modificar registro</h2>
             <p className="info-text">
@@ -547,17 +579,12 @@ function App(){
               </div>
             )}
 
-            <div className="form-group">
-              <label>Motivo de la corrección (opcional)</label>
-              <input type="text" value={mMotivo} onChange={e=>setMMotivo(e.target.value)} placeholder="Ej: cargué al empleado equivocado"/>
-            </div>
-
             {modal.campo==='entrada' && tieneSalida(modal.empleado) && (
               <p className="error" style={{marginBottom:8}}>Si eliminás la entrada también se elimina la salida de este empleado.</p>
             )}
 
             <div className="modal-buttons">
-              <button className="btn-cancel" onClick={()=>{setModal(null);setMMotivo('');}}>Cancelar</button>
+              <button className="btn-cancel" onClick={()=>setModal(null)}>Cancelar</button>
               <button className="btn-ausencia" onClick={eliminarRegistro}>Eliminar</button>
             </div>
             {modal.campo!=='ausencia' && (
